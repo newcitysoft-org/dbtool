@@ -9,7 +9,7 @@ import java.util.List;
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/19 14:18
  */
-public class DbTest2 {
+public class DbTest3 {
 
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
@@ -18,17 +18,17 @@ public class DbTest2 {
 
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
-        List<Dog> list = new ArrayList<>();
+        List<Student> list = new ArrayList<>();
 
-        Dog dog = new Dog();
+        Student student = new Student();
 
-        dog.setName("aa");
-        dog.setWeight(12.56);
-        dog.setAge(6);
+        student.setName("tianlixin");
+        student.setStuNo("asda");
+        student.setAddress("asdasd");
 
-        list.add(dog);
+        list.add(student);
 
-        int i = executor.batchInsert(Dog.class, list);
+        int i = executor.batchInsert(Student.class, list);
 
         System.out.println(i);
     }

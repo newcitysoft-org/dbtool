@@ -144,9 +144,8 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
 
             //执行sql语句
             row = ps.executeUpdate();
-            System.out.println("插入成功(*￣︶￣)");
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             if(ps != null) {
                 try {

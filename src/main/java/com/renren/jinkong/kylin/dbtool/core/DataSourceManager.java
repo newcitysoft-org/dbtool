@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/19 10:44
  */
-public final class DataSourceManager {
+public final class DataSourceManager implements DsManager {
     /**
      * 单例实现管理器对象
      *
@@ -34,6 +34,7 @@ public final class DataSourceManager {
      * @param dbInfo
      * @return
      */
+    @Override
     public DataSource getDataSource(DbInfo dbInfo) {
         DataSource dataSource = map.get(dbInfo.getJdbcUrl());
 
@@ -47,6 +48,7 @@ public final class DataSourceManager {
         return dataSource;
     }
 
+    @Override
     public DataSource getDataSource(String jdbcUrl, String user, String password) {
         DbInfo info = new DbInfo.DbInfoBuilder().jdbcUrl(jdbcUrl).user(user).password(password).build();
 

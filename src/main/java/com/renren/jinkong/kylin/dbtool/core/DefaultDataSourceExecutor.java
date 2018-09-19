@@ -35,9 +35,35 @@ public class DefaultDataSourceExecutor implements DbExecutor, DsManager {
         return executor.batchInsert(dsm.getDataSource(info), clazz, list);
     }
 
+    public int batchUpdate(Class clazz, List list) {
+        if(info == null) {
+            throw new IllegalArgumentException("数据源信息没有设置");
+        }
+
+        return executor.batchUpdate(dsm.getDataSource(info), clazz, list);
+    }
+
+    public int batchDelete(Class clazz, List ids) {
+        if(info == null) {
+            throw new IllegalArgumentException("数据源信息没有设置");
+        }
+
+        return executor.batchDelete(dsm.getDataSource(info), clazz, ids);
+    }
+
     @Override
     public int batchInsert(DataSource source, Class clazz, List list) {
         return executor.batchInsert(source, clazz, list);
+    }
+
+    @Override
+    public int batchUpdate(DataSource source, Class clazz, List list) {
+        return executor.batchUpdate(source, clazz, list);
+    }
+
+    @Override
+    public int batchDelete(DataSource source, Class clazz, List ids) {
+        return executor.batchDelete(source, clazz, ids);
     }
 
     @Override

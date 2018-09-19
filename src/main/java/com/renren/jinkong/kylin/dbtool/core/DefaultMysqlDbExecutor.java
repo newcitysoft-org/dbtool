@@ -1,17 +1,14 @@
 package com.renren.jinkong.kylin.dbtool.core;
 
-import com.renren.jinkong.kylin.dbtool.anno.GeneratedValue;
-import com.renren.jinkong.kylin.dbtool.anno.Id;
-import com.renren.jinkong.kylin.dbtool.anno.Table;
-
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+
+import static com.renren.jinkong.kylin.dbtool.kit.ReflectKit.getFields;
+import static com.renren.jinkong.kylin.dbtool.kit.ReflectKit.getIdField;
 
 /**
  * 数据库执行器
@@ -21,13 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultMysqlDbExecutor implements DbExecutor {
 
-    private static final ConcurrentHashMap<Class, String> sqlMap = new ConcurrentHashMap<>();
-
     @Override
     public int batchInsert(DataSource source, Class clazz, List list) {
         int rows = 0;
         // 反射获取SQL和所有域
-        String sql = generateSql(clazz);
+        String sql = SqlGenerator.generateSql(clazz);
         List<Field> fields = getFields(clazz);
 
         for (Object obj : list) {
@@ -39,80 +34,38 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
         return rows;
     }
 
-    /**
-     * 反射获取所有域
-     *
-     * @param clazz
-     * @return
-     */
-    private List<Field> getFields(Class clazz) {
-        List<Field> fieldList = new LinkedList<>();
+    @Override
+    public int batchUpdate(DataSource source, Class clazz, List list) {
+        int rows = 0;
+        // 反射获取SQL和所有域
+        String sql = SqlGenerator.generateUpdateSql(clazz);
+        List<Field> fields = getFields(clazz);
+        Field idField = getIdField(clazz);
 
-        Field[] fields = clazz.getDeclaredFields();
+        for (Object obj : list) {
+            int row = update(source, sql, fields, idField, obj);
 
-        for(Field field : fields) {
-            Id id = field.getAnnotation(Id.class);
-            GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
-            if(id != null && generatedValue != null) {
-                continue;
-            } else {
-                fieldList.add(field);
-            }
-
+            rows += row;
         }
 
-        return fieldList;
+        return rows;
     }
 
-    /**
-     * 生成动态SQL语句
-     *
-     * @param table
-     * @return
-     */
-    public String generateSql(Class table) {
+    @Override
+    public int batchDelete(DataSource source, Class clazz, List ids) {
+        // 反射获取SQL和所有域
+        String sql = SqlGenerator.generateDeleteSql(clazz);
+        System.out.println(sql);
+        Field idField = getIdField(clazz);
+        int rows = 0;
 
-        Table annotation = (Table) table.getAnnotation(Table.class);
-        String sql = sqlMap.get(table);
+        for (Object id : ids) {
+            int row = delete(source, sql, idField, id);
 
-        if(sql == null) {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("INSERT INTO ");
-            sb.append(annotation.name());
-            sb.append("(");
-
-            // 增加字段参数
-            List<Field> fields = getFields(table);
-
-            for (int i = 0; i < fields.size(); i++) {
-                Field field = fields.get(i);
-
-                sb.append(humpTransferToField(field.getName()) + ",");
-            }
-
-            // 替换最后一个,号为)
-            int index = sb.lastIndexOf(",");
-            sb.replace(index, index + 1, ")");
-
-            sb.append(" VALUES(");
-            // 增加占位符
-
-            for (int i = 0; i < fields.size(); i++) {
-                sb.append("?,");
-            }
-
-            // 替换最后一个,号为)
-            index = sb.lastIndexOf(",");
-            sb.replace(index, index + 1, ")");
-
-            sql = sb.toString();
-
-            sqlMap.put(table, sql);
+            rows += row;
         }
 
-
-        return sql;
+        return rows;
     }
 
     /**
@@ -124,78 +77,126 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
      * @param obj 插入对象
      * @return
      */
-    public int insert(DataSource dataSource, String sql, List<Field> fieldList, Object obj) {
-        int row = 0;
+    private int insert(DataSource dataSource, String sql, List<Field> fieldList, Object obj) {
+        int row = new SqlOperation(dataSource, sql) {
 
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try{
-            // 获取数据库连接
-            conn = dataSource.getConnection();
-            // SQL预编译
-            ps = conn.prepareStatement(sql);
-            // 设置值
-            for(int i = 0; i < fieldList.size(); i++) {
-                Field field = fieldList.get(i);
-
-                field.setAccessible(true);
-                ps.setObject(i+1, field.get(obj));
-            }
-
-            //执行sql语句
-            row = ps.executeUpdate();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if(ps != null) {
+            @Override
+            public void push(PreparedStatement ps) {
+                // 设置值
                 try {
-                    ps.close();
-                } catch (SQLException e) {
+                    for (int i = 0; i < fieldList.size(); i++) {
+                        Field field = fieldList.get(i);
+
+                        field.setAccessible(true);
+
+                        ps.setObject(i + 1, field.get(obj));
+
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            if(conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+        }.execute();
 
         return row;
     }
 
-    /**
-     * 驼峰式转为数据库字段
-     * 例如：
-     * frontName -> front_name
-     * frontNameAgeSs -> front_name_age_ss
-     *
-     * @param humpStr
-     * @return
-     */
-    private static String humpTransferToField(String humpStr) {
-        StringBuilder sb = new StringBuilder();
+    private int update(DataSource dataSource, String sql, List<Field> fieldList, Field idField, Object obj) {
+        int row = new SqlOperation(dataSource, sql) {
 
-        char[] chars = humpStr.toCharArray();
+            @Override
+            public void push(PreparedStatement ps) {
+                // 设置值
+                try {
+                    for (int i = 0; i < fieldList.size(); i++) {
+                        Field field = fieldList.get(i);
 
-        for(int i = 0; i < chars.length; i++) {
-            // 'A' = 65
-            // 'Z' = 90
-            if(chars[i] >= 65 && chars[i] <= 90) {
-                sb.append("_" + String.valueOf(chars[i]).toLowerCase());
-            } else {
-                sb.append(chars[i]);
+                        field.setAccessible(true);
+
+                        ps.setObject(i + 1, field.get(obj));
+
+                    }
+
+                    // 获取id的域
+                    idField.setAccessible(true);
+                    ps.setObject(fieldList.size() + 1, idField.get(obj));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        }.execute();
 
-        return sb.toString();
+        return row;
     }
 
-    public static void main(String[] args) {
-        System.out.println(humpTransferToField("frontName"));
-        System.out.println(humpTransferToField("frontNameAgeSs"));
+    private int delete(DataSource dataSource, String sql, Field idField, Object id) {
+        int row = new SqlOperation(dataSource, sql) {
+            @Override
+            public void push(PreparedStatement ps) {
+                try {
+                    idField.setAccessible(true);
+                    ps.setObject(1, id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+
+        return row;
+    }
+
+    private abstract class SqlOperation {
+
+        private DataSource dataSource;
+        private String sql;
+
+        public SqlOperation(DataSource dataSource, String sql) {
+            this.dataSource = dataSource;
+            this.sql = sql;
+        }
+
+        /**
+         * 设置参数
+         *
+         * @param ps
+         */
+        public abstract void push(PreparedStatement ps);
+
+        public int execute() {
+            int row;
+
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try{
+                // 获取数据库连接
+                conn = dataSource.getConnection();
+                // SQL预编译
+                ps = conn.prepareStatement(sql);
+                // 设置参数
+                push(ps);
+                //执行sql语句
+                row = ps.executeUpdate();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if(ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            return row;
+        }
     }
 }

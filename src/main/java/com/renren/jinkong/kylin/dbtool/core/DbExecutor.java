@@ -17,4 +17,24 @@ public interface DbExecutor {
      * @return
      */
     int batchInsert(DataSource source, Class clazz, List list);
+
+    /**
+     * 批量更新方法
+     *
+     * @param source
+     * @param clazz
+     * @param list
+     * @return
+     */
+    int batchUpdate(DataSource source, Class clazz, List list);
+
+    /**
+     * 批量删除
+     *
+     * @param source
+     * @param clazz
+     * @param ids
+     * @return
+     */
+    int batchDelete(DataSource source, Class clazz, List ids);
 }

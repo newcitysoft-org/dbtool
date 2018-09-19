@@ -1,4 +1,4 @@
-package com.renren.jinkong.kylin.dbtool.core;
+package com.renren.jinkong.kylin.dbtool.core.executor;
 
 import javax.sql.DataSource;
 import java.util.List;

@@ -1,4 +1,8 @@
-package com.renren.jinkong.kylin.dbtool.core;
+package com.renren.jinkong.kylin.dbtool.core.executor;
+
+import com.renren.jinkong.kylin.dbtool.core.DbType;
+import com.renren.jinkong.kylin.dbtool.core.executor.DbExecutor;
+import com.renren.jinkong.kylin.dbtool.core.executor.DefaultMysqlDbExecutor;
 
 /**
  * @author lixin.tian@renren-inc.com

@@ -1,6 +1,6 @@
 package com.renren.jinkong.kylin.dbtool;
 
-import com.renren.jinkong.kylin.dbtool.core.DefaultDataSourceExecutor;
+import com.renren.jinkong.kylin.dbtool.core.executor.DefaultDataSourceExecutor;
 import org.junit.Test;
 
 import java.util.ArrayList;

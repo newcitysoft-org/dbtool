@@ -27,7 +27,7 @@ public class SqlGenerator {
      * @param table
      * @return
      */
-    static String generateSql(Class table) {
+    public static String generateSql(Class table) {
 
         Table annotation = (Table) table.getAnnotation(Table.class);
         String sql = sqlMap.get(table);
@@ -78,7 +78,7 @@ public class SqlGenerator {
      * @param table
      * @return
      */
-    static String generateUpdateSql(Class table) {
+    public static String generateUpdateSql(Class table) {
 
         Table annotation = (Table) table.getAnnotation(Table.class);
         String sql = sqlUpdateMap.get(table);
@@ -125,7 +125,7 @@ public class SqlGenerator {
      * @param table
      * @return
      */
-    static String generateDeleteSql(Class table) {
+    public static String generateDeleteSql(Class table) {
         Table annotation = (Table) table.getAnnotation(Table.class);
         String sql = sqlDeleteMap.get(table);
 

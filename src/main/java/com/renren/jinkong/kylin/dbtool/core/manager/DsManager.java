@@ -1,4 +1,4 @@
-package com.renren.jinkong.kylin.dbtool.core;
+package com.renren.jinkong.kylin.dbtool.core.manager;
 
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 

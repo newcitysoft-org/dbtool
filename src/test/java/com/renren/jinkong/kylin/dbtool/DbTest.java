@@ -1,8 +1,8 @@
 package com.renren.jinkong.kylin.dbtool;
 
-import com.renren.jinkong.kylin.dbtool.core.DataSourceManager;
-import com.renren.jinkong.kylin.dbtool.core.DbExecutor;
-import com.renren.jinkong.kylin.dbtool.core.DbExecutorFactory;
+import com.renren.jinkong.kylin.dbtool.core.manager.DataSourceManager;
+import com.renren.jinkong.kylin.dbtool.core.executor.DbExecutor;
+import com.renren.jinkong.kylin.dbtool.core.executor.DbExecutorFactory;
 import com.renren.jinkong.kylin.dbtool.core.DbType;
 
 import javax.sql.DataSource;

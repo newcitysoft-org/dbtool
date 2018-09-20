@@ -15,12 +15,12 @@ import java.util.List;
  */
 public class DbTest {
 
+    private static final String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+    private static final String user = "root";
+    private static final String password = "root";
+
     public static void main(String[] args) {
         DataSourceManager dsm = DataSourceManager.getDsm();
-
-        String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
-        String user = "root";
-        String password = "root";
 
         DataSource dataSource = dsm.getDataSource(url, user, password);
 

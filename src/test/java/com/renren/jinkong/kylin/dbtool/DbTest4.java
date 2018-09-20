@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class DbTest4 {
 
+    private static final String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+    private static final String user = "root";
+    private static final String password = "root";
+
     @Test
     public void testAdd() {
-        String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
-        String user = "root";
-        String password = "root";
-
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
         List<Student> list = new ArrayList<>();
@@ -38,10 +38,6 @@ public class DbTest4 {
 
     @Test
     public void testUpdate() {
-        String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
-        String user = "root";
-        String password = "root";
-
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
         List<Student> list = new ArrayList<>();
@@ -62,10 +58,6 @@ public class DbTest4 {
 
     @Test
     public void testDelete() {
-        String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
-        String user = "root";
-        String password = "root";
-
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
         List list = Arrays.asList(5,6,7,8);

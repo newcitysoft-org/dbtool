@@ -25,9 +25,33 @@ public class DbMoneyDetailTest {
     private static final String user = "root";
     private static final String password = "root";
 
+    /**
+     * 测试默认全量导入操作
+     *
+     * 默认读取活动sheet页
+     * 起始行号：首行为标题行
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testAdd0() throws Exception {
+        File file = new File("01.xls");
+        ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
+        DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
+
+        List list = excelKit.dataExcelMapToBean();
+        int i = executor.batchInsert(MoneyDetail.class, list);
+        System.out.println(i);
+    }
+
+    /**
+     * 测试指定sheet名称
+     *
+     * @throws Exception
+     */
     @Test
     public void testAdd() throws Exception {
-        File file = new File("D:\\data\\01.xls");
+        File file = new File("01.xls");
         ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
@@ -38,6 +62,11 @@ public class DbMoneyDetailTest {
         System.out.println(i);
     }
 
+    /**
+     * 测试指定开始行号读取表格
+     *
+     * @throws Exception
+     */
     @Test
     public void testAdd2() throws Exception {
         File file = new File("车商资本金明细.xls");
@@ -49,18 +78,11 @@ public class DbMoneyDetailTest {
         System.out.println(i);
     }
 
-    @Test
-    public void testSheet() throws Exception {
-        File file = new File("车商资本金明细.xls");
-        ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
-
-        excelKit.setSheet("车商资本金明细");
-
-
-        Sheet sheet = excelKit.getSheet();
-        System.out.println(sheet);
-    }
-
+    /**
+     * 输出表格的所有sheet和表头
+     *
+     * @throws Exception
+     */
     @Test
     public void testHss() throws Exception {
         File file = new File("车商资本金明细.xls");
@@ -78,6 +100,11 @@ public class DbMoneyDetailTest {
         System.out.println(numberOfSheets);
     }
 
+    /**
+     * 指定活动sheet页
+     *
+     * @throws Exception
+     */
     @Test
     public void testHss2() throws Exception {
         File file = new File("车商资本金明细.xls");

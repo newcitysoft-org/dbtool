@@ -16,7 +16,6 @@ public class ExcelDbPump {
 
     private File file;
     private Class clazz;
-    private AtomicInteger count = new AtomicInteger(0);
     private AtomicInteger startRowNum = new AtomicInteger(0);
 
     private DefaultDataSourceExecutor executor;
@@ -38,8 +37,6 @@ public class ExcelDbPump {
         this.clazz = clazz;
     }
 
-
-
     /**
      * 设置其实行号
      *
@@ -47,10 +44,6 @@ public class ExcelDbPump {
      */
     public void setStartRowNum(int count) {
         this.startRowNum.set(count);
-    }
-
-    public int getCount() {
-        return count.get();
     }
 
     public int execute() throws Exception {

@@ -5,8 +5,6 @@ import com.renren.jinkong.kylin.dbtool.anno.Id;
 import com.renren.jinkong.kylin.dbtool.anno.Mapping;
 
 import java.lang.reflect.Field;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +62,13 @@ public final class ReflectKit {
         return null;
     }
 
-    public static Object convertType(Field field, String value) throws ParseException {
+    public static Object convertType(Field field, String value) {
+//        System.out.println(value);
         Object result = null;
+
+        if(value == null || value.equals("")) {
+            return null;
+        }
 
         String type = field.getGenericType().toString();
 
@@ -86,7 +89,7 @@ public final class ReflectKit {
                 result = Boolean.parseBoolean(value);
                 break;
             case "class java.util.Date":
-                result = DateKit.getDate(value);
+                result = DateKit.getDateByStr(value);
                 break;
             default:
                 break;

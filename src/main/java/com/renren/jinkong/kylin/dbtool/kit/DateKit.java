@@ -34,11 +34,21 @@ public final class DateKit {
     }
 
     public static Date getDate(String date) throws ParseException {
+        System.out.println(date);
         if(date == null || "".equals(date)) {
             return null;
         }
 
         SimpleDateFormat sdf = getDateFormat(date);
         return sdf.parse(date);
+    }
+
+    public static Date getDateByStr(String date) {
+        System.out.println(date);
+        return new Date(date);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getDateByStr("Sun Jun 28 00:00:00 CST 2037"));
     }
 }

@@ -3,7 +3,6 @@ package com.renren.jinkong.kylin.dbtool;
 import com.renren.jinkong.kylin.dbtool.anno.GeneratedValue;
 import com.renren.jinkong.kylin.dbtool.anno.Id;
 import com.renren.jinkong.kylin.dbtool.anno.Mapping;
-import com.renren.jinkong.kylin.dbtool.anno.NotBlank;
 import com.renren.jinkong.kylin.dbtool.anno.Table;
 
 import java.util.Date;
@@ -21,7 +20,6 @@ public class MoneyDetail {
     /**
      * JV公司全称
      */
-    @NotBlank
     @Mapping(cellName = "JV公司全称")
     private String fullName;
 

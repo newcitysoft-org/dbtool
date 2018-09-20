@@ -40,7 +40,7 @@ public class DbMoneyDetailTest {
 
     @Test
     public void testAdd2() throws Exception {
-        File file = new File("D:\\data\\车商资本金明细.xls");
+        File file = new File("车商资本金明细.xls");
         ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
@@ -51,7 +51,7 @@ public class DbMoneyDetailTest {
 
     @Test
     public void testSheet() throws Exception {
-        File file = new File("D:\\data\\车商资本金明细.xls");
+        File file = new File("车商资本金明细.xls");
         ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
 
         excelKit.setSheet("车商资本金明细");
@@ -63,7 +63,7 @@ public class DbMoneyDetailTest {
 
     @Test
     public void testHss() throws Exception {
-        File file = new File("D:\\data\\车商资本金明细.xls");
+        File file = new File("车商资本金明细.xls");
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         HSSFWorkbook workbook = new HSSFWorkbook(bis);
 
@@ -80,7 +80,7 @@ public class DbMoneyDetailTest {
 
     @Test
     public void testHss2() throws Exception {
-        File file = new File("D:\\data\\车商资本金明细.xls");
+        File file = new File("车商资本金明细.xls");
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         HSSFWorkbook workbook = new HSSFWorkbook(bis);
 

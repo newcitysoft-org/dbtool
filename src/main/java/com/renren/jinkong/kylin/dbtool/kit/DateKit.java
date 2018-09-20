@@ -34,7 +34,6 @@ public final class DateKit {
     }
 
     public static Date getDate(String date) throws ParseException {
-        System.out.println(date);
         if(date == null || "".equals(date)) {
             return null;
         }
@@ -44,7 +43,6 @@ public final class DateKit {
     }
 
     public static Date getDateByStr(String date) {
-        System.out.println(date);
         return new Date(date);
     }
 

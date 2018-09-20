@@ -1,6 +1,7 @@
 package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.kit.ReflectKit;
+import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -30,26 +31,58 @@ public class ExcelKit {
     public ExcelKit(File file, Class clazz) {
         this.file = file;
         this.clazz = clazz;
-
-        try {
-            this.sheet = setSheet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    private Sheet setSheet() throws Exception {
+    public void setClazz(Class clazz) {
+        this.clazz = clazz;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public Sheet getSheet() {
+        return this.sheet;
+    }
+
+    /**
+     * 默认设置sheet页
+     *
+     * @return
+     * @throws Exception
+     */
+    private void setSheet() throws Exception {
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         HSSFWorkbook workbook = new HSSFWorkbook(bis);
 
-        // 读取第一个sheet
-        Sheet sheet = workbook.getSheetAt(0);
+        int activeSheetIndex = workbook.getActiveSheetIndex();
+        // 读取活动的sheet页
+        this.sheet = workbook.getSheetAt(activeSheetIndex);
 
         bis.close();
-
-        return sheet;
     }
 
+    /**
+     * 根据sheet页名称设置
+     *
+     * @param sheetName
+     * @throws Exception
+     */
+    public void setSheet(String sheetName) throws Exception {
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+        HSSFWorkbook workbook = new HSSFWorkbook(bis);
+        // 根据指定的sheet名获取sheet页
+        this.sheet = workbook.getSheet(sheetName);
+
+        bis.close();
+    }
+
+    /**
+     * 根据编号设置
+     *
+     * @param row
+     * @throws Exception
+     */
     public void setSheet(int row) throws Exception {
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         HSSFWorkbook workbook = new HSSFWorkbook(bis);
@@ -60,6 +93,12 @@ public class ExcelKit {
         bis.close();
     }
 
+    /**
+     * 数据表格映射到javabean
+     *
+     * @return
+     * @throws Exception
+     */
     public List dataExcelMapToBean() throws Exception {
         // 获取所有数据
         List<Map<String, String>> dataListMap = getDataListMap(getHeadMap());
@@ -67,6 +106,14 @@ public class ExcelKit {
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
+    /**
+     * 数据表格映射到javabean
+     * 指定起始行号
+     *
+     * @param startRowNum
+     * @return
+     * @throws Exception
+     */
     public List dataExcelMapToBean(int startRowNum) throws Exception {
         // 获取所有数据
         List<Map<String, String>> dataListMap = getDataListMap(getHeadMap(startRowNum), startRowNum + 1);
@@ -74,22 +121,36 @@ public class ExcelKit {
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
+    /**
+     * 默认指定首行为标题行
+     *
+     * @return
+     */
     private Map<String, Integer> getHeadMap() {
         return getHeadMap(0);
     }
 
     private Map<String, Integer> getHeadMap(int row) {
-        Map<String, Integer> map = new HashMap<>();
+        if(this.sheet == null) {
+            try {
+                setSheet();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         Row root = sheet.getRow(row);
         short lastCellNum = root.getLastCellNum();
-        System.out.println(lastCellNum);
 
-        for(int i = 0; i < root.getLastCellNum(); i++) {
-            map.put(getCellValue(root.getCell(i)), i);
+        Map<String, Integer> map = new HashMap<>(lastCellNum);
+
+        for(int i = 0; i < lastCellNum; i++) {
+            String title = getCellValue(root.getCell(i));
+
+            if(title != null && !StrKit.isBlank(title)) {
+                map.put(title, i);
+            }
         }
-
-        System.out.println(map);
 
         return map;
     }
@@ -114,31 +175,54 @@ public class ExcelKit {
      */
     private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap, int rowNum) {
         List<Map<String, String>> dataListMap = new LinkedList<>();
-
+        // 获取行数
         int lastRowNum = sheet.getLastRowNum();
-
+        // 遍历所有行
         for (int i = rowNum; i <= lastRowNum; i++) {
-            Map<String, String> dataMap = new HashMap<>();
             Row row = sheet.getRow(i);
+            // 判断是否为空行
+            if(!isRowEmpty(row)) {
+                Map<String, String> dataMap = new HashMap<>(headMap.size());
+                // 获取每行对应的数据
+                for(Map.Entry<String, Integer> head : headMap.entrySet()) {
+                    String cellName = head.getKey();
+                    String cellValue = getCellValue(row.getCell(head.getValue()));
+                    // 添加数据
+                    dataMap.put(cellName, cellValue);
+                }
 
-            for(Map.Entry<String, Integer> head : headMap.entrySet()) {
-                String cellName = head.getKey();
-                System.out.println("列名：" + cellName);
-                String cellValue = getCellValue(row.getCell(head.getValue()));
-
-                dataMap.put(cellName, cellValue);
+                dataListMap.add(dataMap);
             }
-
-            dataListMap.add(dataMap);
         }
 
         return dataListMap;
     }
 
+    /**
+     * 判断行是否为空行
+     *
+     * @param row
+     * @return
+     */
+    public static boolean isRowEmpty(Row row) {
+        for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+            Cell cell = row.getCell(c);
 
-    private static String getCellValue(Cell cell) {
-        System.out.println("类型：" + cell.getCellType());
-        System.out.println("数值：" + cell);
+            if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取单元格的值
+     *
+     * @param cell
+     * @return
+     */
+    public static String getCellValue(Cell cell) {
         if (null == cell) {
             return "";
         }
@@ -146,8 +230,6 @@ public class ExcelKit {
         String cellValue = "";
         switch (cell.getCellType()) {
             case HSSFCell.CELL_TYPE_NUMERIC:
-//                cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-//                cellValue = cell.toString();
                 if(HSSFDateUtil.isCellDateFormatted(cell)){
                     //  如果是date类型则 ，获取该cell的date值
                     if(!"".equals(cell.getNumericCellValue())) {
@@ -155,7 +237,6 @@ public class ExcelKit {
                     }
                 } else {
                     // 纯数字
-                    System.out.println("数字格式需要转化：" + cell);
                     DecimalFormat df = new DecimalFormat("#,##0.00");
                     cellValue = df.format(cell.getNumericCellValue()).replace(",", "");
                 }

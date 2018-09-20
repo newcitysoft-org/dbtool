@@ -86,8 +86,7 @@ public final class ReflectKit {
                 result = Boolean.parseBoolean(value);
                 break;
             case "class java.util.Date":
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                result = sdf.parse(value);
+                result = DateKit.getDate(value);
                 break;
             default:
                 break;

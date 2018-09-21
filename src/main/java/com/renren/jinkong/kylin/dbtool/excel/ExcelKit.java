@@ -1,20 +1,12 @@
 package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.kit.ReflectKit;
-import com.renren.jinkong.kylin.dbtool.kit.StrKit;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -93,206 +85,99 @@ public class ExcelKit {
         bis.close();
     }
 
+
     /**
-     * 数据表格映射到javabean
+     * 数据表格表格到集合映射
+     * 默认行为
+     *
+     * 第0行为表头行号
+     * 第1行为数据起始行号
+     * 最后一行为数据结束行号
      *
      * @return
      * @throws Exception
      */
-    public List dataExcelMapToBean() throws Exception {
+    public List dataExcelMapToList() throws Exception {
+        if(sheet == null) {
+            setSheet();
+        }
+
+        ExcelMapper mapper = new ExcelMapper(sheet, 0, 1, sheet.getLastRowNum());
+
         // 获取所有数据
-        List<Map<String, String>> dataListMap = getDataListMap(getHeadMap());
+        List<Map<String, String>> dataListMap = mapper.getDataListMap();
         // 转换ListMap->ListObject
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
     /**
-     * 数据表格映射到javabean
-     * 指定起始行号
+     * 数据表格表格到集合映射
+     *
+     * 指定表头行号，默认数据起始行号为表头行号+1
+     * 数据结束行为最后一行
      *
      * @param headRowNum
      * @return
      * @throws Exception
      */
-    public List dataExcelMapToBean(int headRowNum) throws Exception {
+    public List dataExcelMapToList(int headRowNum) throws Exception {
+        if(sheet == null) {
+            setSheet();
+        }
+
+        ExcelMapper mapper = new ExcelMapper(sheet, headRowNum, headRowNum + 1, sheet.getLastRowNum());
+
         // 获取所有数据
-        List<Map<String, String>> dataListMap = getDataListMap(getHeadMap(headRowNum), headRowNum + 1);
+        List<Map<String, String>> dataListMap = mapper.getDataListMap();
         // 转换ListMap->ListObject
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
     /**
+     * 数据表格表格到集合映射
      *
+     * 指定表头行号，默认数据起始行号为表头行号+1
      *
-     * @param headRowNum 表头的起始行号
+     * @param headRowNum 表头行号
      * @param endRowNum 数据的结束行号
      * @return
      * @throws Exception
      */
-    public List dataExcelMapToBean(int headRowNum, int endRowNum) throws Exception {
+    public List dataExcelMapToList(int headRowNum, int endRowNum) throws Exception {
+        if(sheet == null) {
+            setSheet();
+        }
+
+        ExcelMapper mapper = new ExcelMapper(sheet, headRowNum, headRowNum + 1, endRowNum);
+
         // 获取所有数据
-        List<Map<String, String>> dataListMap = getDataListMap(getHeadMap(headRowNum), headRowNum + 1, endRowNum);
+        List<Map<String, String>> dataListMap = mapper.getDataListMap();
         // 转换ListMap->ListObject
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
     /**
-     * 默认指定首行为标题行
+     * 数据表格表格到集合映射
+     * 明确指定三个行号
      *
-     * @return
-     */
-    private Map<String, Integer> getHeadMap() {
-        return getHeadMap(0);
-    }
-
-    /**
-     * 指定头部信息的起始行号
-     *
-     * @param headRowNum
-     * @return
-     */
-    private Map<String, Integer> getHeadMap(int headRowNum) {
-        if(this.sheet == null) {
-            try {
-                setSheet();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        Row root = sheet.getRow(headRowNum);
-        short lastCellNum = root.getLastCellNum();
-
-        Map<String, Integer> map = new HashMap<>(lastCellNum);
-
-        for(int i = 0; i < lastCellNum; i++) {
-            String title = getCellValue(root.getCell(i));
-
-            if(title != null && !StrKit.isBlank(title)) {
-                map.put(title, i);
-            }
-        }
-
-        return map;
-    }
-
-    /**
-     * 从表格中获取ListMap数据
-     * 从第二行开始
-     *
-     * @param headMap
-     * @return
-     */
-    private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap) {
-        return getDataListMap(headMap, 1);
-    }
-
-    /**
-     * 从表格中获取ListMap数据
-     * 到末尾行结束
-     *
-     * @param headMap 头部map
-     * @param startRowNum 数据起始行号
-     * @return
-     */
-    private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap, int startRowNum) {
-        return getDataListMap(headMap, startRowNum, sheet.getLastRowNum());
-    }
-
-    /**
-     * 指定读取数据的起始行号和结束行号
-     *
-     * @param headMap
-     * @param startRowNum
+     * @param headRowNum 表头行号
+     * @param startNum
      * @param endRowNum
      * @return
+     * @throws Exception
      */
-    private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap, int startRowNum, int endRowNum) {
-        List<Map<String, String>> dataListMap = new LinkedList<>();
-        if(endRowNum == 0) {
-            endRowNum = sheet.getLastRowNum();
+    public List dataExcelMapToList(int headRowNum, int startNum, int endRowNum) throws Exception {
+        if(sheet == null) {
+            setSheet();
         }
 
-        // 遍历所有行
-        for (int i = startRowNum; i <= endRowNum; i++) {
-            Row row = sheet.getRow(i);
-            // 判断是否为空行
-            if(!isRowEmpty(row)) {
-                Map<String, String> dataMap = new HashMap<>(headMap.size());
-                // 获取每行对应的数据
-                for(Map.Entry<String, Integer> head : headMap.entrySet()) {
-                    String cellName = head.getKey();
-                    String cellValue = getCellValue(row.getCell(head.getValue()));
-                    // 添加数据
-                    dataMap.put(cellName, cellValue);
-                }
+        ExcelMapper mapper = new ExcelMapper(sheet, headRowNum, startNum, endRowNum);
 
-                dataListMap.add(dataMap);
-            }
-        }
-
-        return dataListMap;
+        // 获取所有数据
+        List<Map<String, String>> dataListMap = mapper.getDataListMap();
+        // 转换ListMap->ListObject
+        return ReflectKit.transferToList(clazz, dataListMap);
     }
 
-    /**
-     * 判断行是否为空行
-     *
-     * @param row
-     * @return
-     */
-    public static boolean isRowEmpty(Row row) {
-        for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
-            Cell cell = row.getCell(c);
-
-            if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * 获取单元格的值
-     *
-     * @param cell
-     * @return
-     */
-    public static String getCellValue(Cell cell) {
-        if (null == cell) {
-            return "";
-        }
-
-        String cellValue = "";
-        switch (cell.getCellType()) {
-            case HSSFCell.CELL_TYPE_NUMERIC:
-                if(HSSFDateUtil.isCellDateFormatted(cell)){
-                    //  如果是date类型则 ，获取该cell的date值
-                    if(!"".equals(cell.getNumericCellValue())) {
-                        cellValue = HSSFDateUtil.getJavaDate(cell.getNumericCellValue()).toString();
-                    }
-                } else {
-                    // 纯数字
-                    DecimalFormat df = new DecimalFormat("#,##0.00");
-                    cellValue = df.format(cell.getNumericCellValue()).replace(",", "");
-                }
-
-                break;
-            case HSSFCell.CELL_TYPE_STRING:
-                cellValue = cell.getRichStringCellValue().getString().trim();
-                break;
-            case HSSFCell.CELL_TYPE_FORMULA:
-                cellValue = String.valueOf(cell.getNumericCellValue());
-                break;
-            case HSSFCell.CELL_TYPE_BOOLEAN:
-                cellValue = String.valueOf(cell.getBooleanCellValue()).trim();
-                break;
-
-            default:
-                cellValue = "";
-        }
-
-        return cellValue;
-    }
 
 }

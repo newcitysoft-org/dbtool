@@ -23,7 +23,7 @@ public class DbTest5 {
         ExcelKit excelKit = new ExcelKit(file, Student.class);
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
-        List list = excelKit.dataExcelMapToBean();
+        List list = excelKit.dataExcelMapToList();
         int i = executor.batchInsert(Student.class, list);
         System.out.println(i);
     }
@@ -34,7 +34,7 @@ public class DbTest5 {
         ExcelKit excelKit = new ExcelKit(file, Dog.class);
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
-        List list = excelKit.dataExcelMapToBean();
+        List list = excelKit.dataExcelMapToList();
         int i = executor.batchInsert(Dog.class, list);
         System.out.println(i);
     }

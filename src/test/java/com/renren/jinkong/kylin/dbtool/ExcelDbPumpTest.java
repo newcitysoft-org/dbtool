@@ -17,7 +17,7 @@ public class ExcelDbPumpTest {
 
     @Test
     public void test() throws Exception {
-        File file = new File("01.xls");
+        File file = new File("D:\\data\\01.xls");
         ExcelDbPump pump = new ExcelDbPump(url, user, password);
 
         pump.set(file, MoneyDetail.class);
@@ -36,7 +36,9 @@ public class ExcelDbPumpTest {
         // 设置映射类
         pump.setClazz(MoneyDetail.class);
         // 设置起始行号
-        pump.setStartRowNum(1);
+        pump.setHeadRowNum(1);
+        pump.setStartRowNum(5);
+        pump.setEndRowNum(10);
 
         int i = pump.execute();
         System.out.println(i);

@@ -2,6 +2,7 @@ package com.renren.jinkong.kylin.dbtool;
 
 import com.renren.jinkong.kylin.dbtool.core.executor.DefaultDataSourceExecutor;
 import com.renren.jinkong.kylin.dbtool.excel.ExcelKit;
+import com.renren.jinkong.kylin.dbtool.excel.ExcelMapper;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -39,7 +40,7 @@ public class DbMoneyDetailTest {
         ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
-        List list = excelKit.dataExcelMapToBean();
+        List list = excelKit.dataExcelMapToList();
         int i = executor.batchInsert(MoneyDetail.class, list);
         System.out.println(i);
     }
@@ -57,7 +58,7 @@ public class DbMoneyDetailTest {
 
         excelKit.setSheet("Sheet1");
 
-        List list = excelKit.dataExcelMapToBean();
+        List list = excelKit.dataExcelMapToList();
         int i = executor.batchInsert(MoneyDetail.class, list);
         System.out.println(i);
     }
@@ -73,7 +74,7 @@ public class DbMoneyDetailTest {
         ExcelKit excelKit = new ExcelKit(file, MoneyDetail.class);
         DefaultDataSourceExecutor executor = new DefaultDataSourceExecutor(url, user, password);
 
-        List list = excelKit.dataExcelMapToBean(1);
+        List list = excelKit.dataExcelMapToList(1);
         int i = executor.batchInsert(MoneyDetail.class, list);
         System.out.println(i);
     }
@@ -126,7 +127,7 @@ public class DbMoneyDetailTest {
         short lastCellNum = root.getLastCellNum();
 
         for(int i = 0; i < lastCellNum; i++) {
-            map.put(ExcelKit.getCellValue(root.getCell(i)), i);
+            map.put(ExcelMapper.getCellValue(root.getCell(i)), i);
         }
 
         return map;

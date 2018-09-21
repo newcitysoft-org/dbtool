@@ -25,7 +25,7 @@ public class ExcelDbPumpTest2 {
         // 设置映射类
         pump.setClazz(CityMoneyDetail.class);
         // 设置起始行号
-        pump.setStartRowNum(1);
+        pump.setHeadRowNum(1);
         pump.setEndRowNum(115);
 
         int i = pump.execute();

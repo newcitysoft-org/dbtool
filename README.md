@@ -165,7 +165,7 @@
     
     
 ##### 执行操作
-
+    // 具体SQL脚本和表格找开发者获取
     File file = new File("D:\\data\\车商资本金明细.xls");
     ExcelDbPump pump = new ExcelDbPump(url, user, password);
 
@@ -173,9 +173,11 @@
     pump.setFile(file);
     // 设置映射类
     pump.setClazz(MoneyDetail.class);
+    // 设置表头行号
+    pump.setHeadRowNum(1);
     // 设置起始行号
-    pump.setStartRowNum(1);
+    pump.setStartRowNum(5);
     // 设置结束行号
-    pump.setEndRowNum(50);
-        
+    pump.setEndRowNum(20);
+    // 执行并获取所影响行数
     int i = pump.execute();

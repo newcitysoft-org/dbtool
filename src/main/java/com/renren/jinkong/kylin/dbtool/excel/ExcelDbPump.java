@@ -46,6 +46,7 @@ public class ExcelDbPump {
      */
     public void setHeadRowNum(int count) {
         this.headRowNum.set(count);
+        this.startRowNum.set(count + 1);
     }
 
     /**

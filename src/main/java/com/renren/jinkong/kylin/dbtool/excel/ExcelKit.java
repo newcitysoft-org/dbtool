@@ -14,7 +14,7 @@ import java.util.Map;
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/20 11:47
  */
-public class ExcelKit {
+class ExcelKit {
 
     private Class clazz;
     private File file;

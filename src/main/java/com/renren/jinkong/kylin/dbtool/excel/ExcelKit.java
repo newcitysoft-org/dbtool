@@ -110,13 +110,28 @@ public class ExcelKit {
      * 数据表格映射到javabean
      * 指定起始行号
      *
-     * @param startRowNum
+     * @param headRowNum
      * @return
      * @throws Exception
      */
-    public List dataExcelMapToBean(int startRowNum) throws Exception {
+    public List dataExcelMapToBean(int headRowNum) throws Exception {
         // 获取所有数据
-        List<Map<String, String>> dataListMap = getDataListMap(getHeadMap(startRowNum), startRowNum + 1);
+        List<Map<String, String>> dataListMap = getDataListMap(getHeadMap(headRowNum), headRowNum + 1);
+        // 转换ListMap->ListObject
+        return ReflectKit.transferToList(clazz, dataListMap);
+    }
+
+    /**
+     *
+     *
+     * @param headRowNum 表头的起始行号
+     * @param endRowNum 数据的结束行号
+     * @return
+     * @throws Exception
+     */
+    public List dataExcelMapToBean(int headRowNum, int endRowNum) throws Exception {
+        // 获取所有数据
+        List<Map<String, String>> dataListMap = getDataListMap(getHeadMap(headRowNum), headRowNum + 1, endRowNum);
         // 转换ListMap->ListObject
         return ReflectKit.transferToList(clazz, dataListMap);
     }
@@ -130,7 +145,13 @@ public class ExcelKit {
         return getHeadMap(0);
     }
 
-    private Map<String, Integer> getHeadMap(int row) {
+    /**
+     * 指定头部信息的起始行号
+     *
+     * @param headRowNum
+     * @return
+     */
+    private Map<String, Integer> getHeadMap(int headRowNum) {
         if(this.sheet == null) {
             try {
                 setSheet();
@@ -139,7 +160,7 @@ public class ExcelKit {
             }
         }
 
-        Row root = sheet.getRow(row);
+        Row root = sheet.getRow(headRowNum);
         short lastCellNum = root.getLastCellNum();
 
         Map<String, Integer> map = new HashMap<>(lastCellNum);
@@ -157,7 +178,7 @@ public class ExcelKit {
 
     /**
      * 从表格中获取ListMap数据
-     * 从第第二行开始
+     * 从第二行开始
      *
      * @param headMap
      * @return
@@ -168,17 +189,32 @@ public class ExcelKit {
 
     /**
      * 从表格中获取ListMap数据
+     * 到末尾行结束
      *
      * @param headMap 头部map
-     * @param rowNum 数据起始行号
+     * @param startRowNum 数据起始行号
      * @return
      */
-    private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap, int rowNum) {
+    private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap, int startRowNum) {
+        return getDataListMap(headMap, startRowNum, sheet.getLastRowNum());
+    }
+
+    /**
+     * 指定读取数据的起始行号和结束行号
+     *
+     * @param headMap
+     * @param startRowNum
+     * @param endRowNum
+     * @return
+     */
+    private List<Map<String, String>> getDataListMap(Map<String, Integer> headMap, int startRowNum, int endRowNum) {
         List<Map<String, String>> dataListMap = new LinkedList<>();
-        // 获取行数
-        int lastRowNum = sheet.getLastRowNum();
+        if(endRowNum == 0) {
+            endRowNum = sheet.getLastRowNum();
+        }
+
         // 遍历所有行
-        for (int i = rowNum; i <= lastRowNum; i++) {
+        for (int i = startRowNum; i <= endRowNum; i++) {
             Row row = sheet.getRow(i);
             // 判断是否为空行
             if(!isRowEmpty(row)) {

@@ -17,6 +17,7 @@ public class ExcelDbPump {
     private File file;
     private Class clazz;
     private AtomicInteger startRowNum = new AtomicInteger(0);
+    private AtomicInteger endRowNum = new AtomicInteger(0);
 
     private DefaultDataSourceExecutor executor;
 
@@ -46,6 +47,10 @@ public class ExcelDbPump {
         this.startRowNum.set(count);
     }
 
+    public void setEndRowNum(int endRowNum) {
+        this.endRowNum.set(endRowNum);
+    }
+
     public int execute() throws Exception {
         if(this.executor == null) {
             throw new IllegalArgumentException("DefaultDataSourceExecutor不能为空");
@@ -61,7 +66,7 @@ public class ExcelDbPump {
 
         ExcelKit excelKit = new ExcelKit(file, clazz);
 
-        List list = excelKit.dataExcelMapToBean(startRowNum.get());
+        List list = excelKit.dataExcelMapToBean(startRowNum.get(), endRowNum.get());
 
         return executor.batchInsert(clazz, list);
     }

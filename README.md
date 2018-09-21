@@ -1,4 +1,4 @@
-## 使用帮助
+## 表格到数据库的导向工具
 
 该插件目的：实现数据表格到关系型数据库的导向操作。
 
@@ -108,7 +108,7 @@
         private String accountName;
     
         /**
-         * 出资账号
+         * 出资账号**
          */
         @Mapping(cellName = "出资账号")
         private String account;

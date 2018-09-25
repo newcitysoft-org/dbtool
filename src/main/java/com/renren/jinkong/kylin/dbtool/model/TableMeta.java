@@ -15,10 +15,6 @@ import java.util.List;
  * @author lixin.tian@renren-inc.com
  * @date 2018-09-25
  */
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class TableMeta implements Serializable {
 
 	private static final long serialVersionUID = -4659736956433755858L;
@@ -37,5 +33,47 @@ public class TableMeta implements Serializable {
 	/**
 	 * 字段 meta
 	 */
-	public List<ColumnMeta> columnMetas = new ArrayList<ColumnMeta>();
+	public List<ColumnMeta> columnMetas = new ArrayList<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getPrimaryKey() {
+		return primaryKey;
+	}
+
+	public void setPrimaryKey(String primaryKey) {
+		this.primaryKey = primaryKey;
+	}
+
+	public List<ColumnMeta> getColumnMetas() {
+		return columnMetas;
+	}
+
+	public void setColumnMetas(List<ColumnMeta> columnMetas) {
+		this.columnMetas = columnMetas;
+	}
+
+	@Override
+	public String toString() {
+		return "TableMeta{" +
+				"name='" + name + '\'' +
+				", remarks='" + remarks + '\'' +
+				", primaryKey='" + primaryKey + '\'' +
+				", columnMetas=" + columnMetas +
+				'}';
+	}
 }

@@ -1,10 +1,5 @@
 package com.renren.jinkong.kylin.dbtool.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 /**
@@ -12,10 +7,6 @@ import java.io.Serializable;
  * @author lixin.tian@renren-inc.com
  * @date 2018-09-25
  */
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class ColumnMeta implements Serializable {
 
 	private static final long serialVersionUID = 6852879237267377779L;
@@ -58,5 +49,83 @@ public class ColumnMeta implements Serializable {
 	 * 字段备注
 	 */
 	public String remarks;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getJavaType() {
+		return javaType;
+	}
+
+	public void setJavaType(String javaType) {
+		this.javaType = javaType;
+	}
+
+	public String getAttrName() {
+		return attrName;
+	}
+
+	public void setAttrName(String attrName) {
+		this.attrName = attrName;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getIsNullable() {
+		return isNullable;
+	}
+
+	public void setIsNullable(String isNullable) {
+		this.isNullable = isNullable;
+	}
+
+	public String getIsPrimaryKey() {
+		return isPrimaryKey;
+	}
+
+	public void setIsPrimaryKey(String isPrimaryKey) {
+		this.isPrimaryKey = isPrimaryKey;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	@Override
+	public String toString() {
+		return "ColumnMeta{" +
+				"name='" + name + '\'' +
+				", javaType='" + javaType + '\'' +
+				", attrName='" + attrName + '\'' +
+				", type='" + type + '\'' +
+				", isNullable='" + isNullable + '\'' +
+				", isPrimaryKey='" + isPrimaryKey + '\'' +
+				", defaultValue='" + defaultValue + '\'' +
+				", remarks='" + remarks + '\'' +
+				'}';
+	}
 }
 

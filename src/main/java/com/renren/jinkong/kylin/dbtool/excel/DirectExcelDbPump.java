@@ -1,6 +1,7 @@
 package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.core.executor.DirectDataSourceExecutor;
+import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 
@@ -14,10 +15,26 @@ import java.util.List;
  * @date 2018/9/20 17:39
  */
 public class DirectExcelDbPump {
+    /**
+     * 直接方式执行器对象（带数据源）
+     */
+    private DirectDataSourceExecutor executor;
+    /**
+     * 文件对象
+     */
     private File file;
+    /**
+     * 数据库信息
+     */
     private DbInfo info;
+    /**
+     * 表格名
+     */
     private String dbTableName;
-    // 表格相关属性设置
+    /**
+     * 插入模式
+     */
+    private DbInMode inMode = DbInMode.ADD;
     /**
      * sheet页名称
      */
@@ -35,24 +52,35 @@ public class DirectExcelDbPump {
      */
     private int endRowNum;
 
-    private DirectDataSourceExecutor executor;
+    public DirectExcelDbPump(DbInfo info) {
+        this.info = info;
+    }
 
     public DirectExcelDbPump(String jdbcUrl, String user, String password) {
         this.info = new DbInfo(jdbcUrl, user, password);
     }
 
-    public DirectExcelDbPump(DbInfo info) {
-        this.info = info;
+
+
+    /**
+     * 设置插入模式
+     *
+     * @param inMode
+     */
+    public void setInMode(DbInMode inMode) {
+        this.inMode = inMode;
     }
 
     public void setFile(File file) {
         this.file = file;
     }
+
     public void setDbTableName(String dbTableName) {
         this.dbTableName = dbTableName;
         // 创建直接方式的执行器对象
-        this.executor = new DirectDataSourceExecutor(info, dbTableName);
+        this.executor = new DirectDataSourceExecutor(info, dbTableName, inMode);
     }
+
     public void setSheetName(String sheetName) {
         this.sheetName = sheetName;
     }

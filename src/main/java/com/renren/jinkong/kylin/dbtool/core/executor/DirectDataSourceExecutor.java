@@ -2,6 +2,7 @@ package com.renren.jinkong.kylin.dbtool.core.executor;
 
 import com.renren.jinkong.kylin.dbtool.core.MetaBuilder;
 import com.renren.jinkong.kylin.dbtool.core.manager.DataSourceManager;
+import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 import com.renren.jinkong.kylin.dbtool.model.TableMeta;
@@ -16,11 +17,13 @@ import java.util.List;
 public class DirectDataSourceExecutor {
     private DataSource dataSource;
     private String dbTableName;
+    private DbInMode inMode;
 
-    public DirectDataSourceExecutor(DbInfo info, String dbTableName) {
+    public DirectDataSourceExecutor(DbInfo info, String dbTableName, DbInMode inMode) {
         dataSource = DataSourceManager.getDsm().getDataSource(info);
         // 设置对象属性
         this.dbTableName = dbTableName;
+        this.inMode = inMode;
     }
 
     public int batchInsert(List list) {
@@ -33,7 +36,7 @@ public class DirectDataSourceExecutor {
         }
 
         TableMeta tableMeta = new MetaBuilder(dataSource).build(dbTableName);
-        DirectMysqlDbExecutor executor = new DirectMysqlDbExecutor(dataSource, tableMeta);
+        DirectMysqlDbExecutor executor = new DirectMysqlDbExecutor(dataSource, tableMeta, inMode);
 
         return executor.batchInsert(list);
     }

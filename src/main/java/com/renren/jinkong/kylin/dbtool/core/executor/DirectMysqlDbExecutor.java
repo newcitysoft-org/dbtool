@@ -2,6 +2,7 @@ package com.renren.jinkong.kylin.dbtool.core.executor;
 
 import com.renren.jinkong.kylin.dbtool.core.DirectSqlGenerator;
 import com.renren.jinkong.kylin.dbtool.core.TypeMapping;
+import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
 import com.renren.jinkong.kylin.dbtool.core.op.SqlOperation;
 import com.renren.jinkong.kylin.dbtool.model.ColumnMeta;
 import com.renren.jinkong.kylin.dbtool.model.TableMeta;
@@ -20,19 +21,22 @@ public class DirectMysqlDbExecutor {
 
     private DataSource source;
     private TableMeta tableMeta;
+    private DbInMode dbInMode;
 
-    public DirectMysqlDbExecutor(DataSource source, TableMeta tableMeta) {
+    public DirectMysqlDbExecutor(DataSource source, TableMeta tableMeta, DbInMode inMode) {
         this.source = source;
         this.tableMeta = tableMeta;
+        this.dbInMode = inMode;
     }
 
     public int batchInsert(List<Map<String, String>> list) {
         int rows = 0;
 
-        System.out.println("数据：" + list);
-
         String sql = DirectSqlGenerator.generateSql(tableMeta);
-        System.out.println(sql);
+
+        if(this.dbInMode == DbInMode.DELETE_AND_ADD) {
+
+        }
 
         for (Map<String, String> map : list) {
             int row = insert(sql, map);
@@ -67,6 +71,20 @@ public class DirectMysqlDbExecutor {
                         }
                     }
                 }
+            }
+        }.execute();
+
+        return row;
+    }
+
+    public int delete(TableMeta tableMeta) {
+        String sql = "delete  from " + tableMeta.getName();
+
+       int row = new SqlOperation(source, sql) {
+
+            @Override
+            public void push(PreparedStatement ps) {
+
             }
         }.execute();
 

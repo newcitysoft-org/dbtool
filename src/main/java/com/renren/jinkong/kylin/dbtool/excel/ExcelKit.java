@@ -20,6 +20,10 @@ class ExcelKit {
     private File file;
     private Sheet sheet;
 
+    public ExcelKit(File file) {
+        this.file = file;
+    }
+
     public ExcelKit(File file, Class clazz) {
         this.file = file;
         this.clazz = clazz;
@@ -179,5 +183,16 @@ class ExcelKit {
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
+    public List<Map<String, String>> getExcelDataMap(int headRowNum, int startNum, int endRowNum) throws Exception {
+        if(sheet == null) {
+            setSheet();
+        }
+
+        ExcelMapper mapper = new ExcelMapper(sheet, headRowNum, startNum, endRowNum);
+
+        // 获取所有数据
+        List<Map<String, String>> dataListMap = mapper.getDataListMap();
+        return dataListMap;
+    }
 
 }

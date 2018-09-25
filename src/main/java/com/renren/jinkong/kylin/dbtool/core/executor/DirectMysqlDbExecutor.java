@@ -29,17 +29,20 @@ public class DirectMysqlDbExecutor {
     public int batchInsert(List<Map<String, String>> list) {
         int rows = 0;
 
+        System.out.println("数据：" + list);
+
+        String sql = DirectSqlGenerator.generateSql(tableMeta);
+        System.out.println(sql);
+
         for (Map<String, String> map : list) {
-            int row = insert(map);
+            int row = insert(sql, map);
             rows += row;
         }
 
         return rows;
     }
 
-    public int insert(Map<String, String> map) {
-        String sql = DirectSqlGenerator.generateSql(tableMeta);
-
+    public int insert(String sql, Map<String, String> map) {
         int row = new SqlOperation(source, sql) {
 
             @Override
@@ -54,9 +57,11 @@ public class DirectMysqlDbExecutor {
                         String remarks = meta.getRemarks();
                         // 强映射获取数值
                         String value = map.get(remarks);
+                        System.out.println(value);
                         // 设置值
                         try {
-                            ps.setObject(i + 1, TypeMapping.convertType(meta.getJavaType(), value));
+                            Object o = TypeMapping.convertType(meta.getJavaType(), value);
+                            ps.setObject(i + 1, o);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

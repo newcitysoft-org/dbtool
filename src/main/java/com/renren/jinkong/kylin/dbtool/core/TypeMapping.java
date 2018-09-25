@@ -80,22 +80,22 @@ public class TypeMapping {
 		}
 
 		switch (type) {
-			case "class java.lang.String":
+			case "java.lang.String":
 				result = value;
 				break;
-			case "class java.lang.Integer":
+			case "java.lang.Integer":
 			case "int":
 				result = Integer.parseInt(value);
 				break;
-			case "class java.lang.Double":
+			case "java.lang.Double":
 			case "double":
 				result = Double.parseDouble(value);
 				break;
-			case "class java.lang.Boolean":
+			case "java.lang.Boolean":
 			case "boolean":
 				result = Boolean.parseBoolean(value);
 				break;
-			case "class java.util.Date":
+			case "java.util.Date":
 				result = DateKit.getDateByStr(value);
 				break;
 			case "java.lang.Long":

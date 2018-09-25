@@ -2,6 +2,7 @@ package com.renren.jinkong.kylin.dbtool.core.executor;
 
 import com.renren.jinkong.kylin.dbtool.core.MetaBuilder;
 import com.renren.jinkong.kylin.dbtool.core.manager.DataSourceManager;
+import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 import com.renren.jinkong.kylin.dbtool.model.TableMeta;
 
@@ -25,6 +26,10 @@ public class DirectDataSourceExecutor {
     public int batchInsert(List list) {
         if(dataSource == null) {
             throw new IllegalArgumentException("未获取数据源！");
+        }
+
+        if(StrKit.isBlank(dbTableName)) {
+            throw new IllegalArgumentException("未设置数据表！");
         }
 
         TableMeta tableMeta = new MetaBuilder(dataSource).build(dbTableName);

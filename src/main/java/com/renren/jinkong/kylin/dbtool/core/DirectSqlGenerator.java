@@ -26,6 +26,7 @@ public class DirectSqlGenerator {
         String sql = sqlMap.get(tableMeta.getName());
 
         if(sql == null) {
+            int count = 0;
             StringBuilder sb = new StringBuilder();
 
             sb.append("INSERT INTO ");
@@ -42,6 +43,7 @@ public class DirectSqlGenerator {
 
                 if(!"id".equals(name)) {
                     sb.append(name + ",");
+                    count++;
                 }
             }
 
@@ -52,13 +54,8 @@ public class DirectSqlGenerator {
             sb.append(" VALUES(");
             // 增加占位符
 
-            for (int i = 0; i < columnMetas.size(); i++) {
-
-                String name = columnMetas.get(i).getName();
-
-                if(!"id".equals(name)) {
-                    sb.append("?,");
-                }
+            for (int i = 0; i < count; i++) {
+                sb.append("?,");
             }
 
             // 替换最后一个,号为)

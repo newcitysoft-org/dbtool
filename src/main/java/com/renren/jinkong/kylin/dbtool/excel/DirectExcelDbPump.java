@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class DirectExcelDbPump {
     private File file;
+    private DbInfo info;
     private String dbTableName;
     // 表格相关属性设置
     /**
@@ -37,9 +38,11 @@ public class DirectExcelDbPump {
     private DirectDataSourceExecutor executor;
 
     public DirectExcelDbPump(String jdbcUrl, String user, String password) {
-        DbInfo dbInfo = new DbInfo(jdbcUrl, user, password);
-        // 创建直接方式的执行器对象
-        this.executor = new DirectDataSourceExecutor(dbInfo, dbTableName);
+        this.info = new DbInfo(jdbcUrl, user, password);
+    }
+
+    public DirectExcelDbPump(DbInfo info) {
+        this.info = info;
     }
 
     public void setFile(File file) {
@@ -47,6 +50,8 @@ public class DirectExcelDbPump {
     }
     public void setDbTableName(String dbTableName) {
         this.dbTableName = dbTableName;
+        // 创建直接方式的执行器对象
+        this.executor = new DirectDataSourceExecutor(info, dbTableName);
     }
     public void setSheetName(String sheetName) {
         this.sheetName = sheetName;
@@ -96,6 +101,8 @@ public class DirectExcelDbPump {
         }
 
         List list = excelKit.getExcelDataMap(this.headRowNum, startRowNum, endRowNum);
+
+        System.out.println(list);
 
         return executor.batchInsert(list);
     }

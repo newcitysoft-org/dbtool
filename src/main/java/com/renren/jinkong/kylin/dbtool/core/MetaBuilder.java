@@ -1,6 +1,5 @@
 package com.renren.jinkong.kylin.dbtool.core;
 
-
 import com.renren.jinkong.kylin.dbtool.core.dialect.Dialect;
 import com.renren.jinkong.kylin.dbtool.core.dialect.MysqlDialect;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;

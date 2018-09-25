@@ -34,8 +34,9 @@ public class DirectMysqlDbExecutor {
 
         String sql = DirectSqlGenerator.generateSql(tableMeta);
 
+        System.out.println(dbInMode);
         if(this.dbInMode == DbInMode.DELETE_AND_ADD) {
-
+            delete(tableMeta);
         }
 
         for (Map<String, String> map : list) {
@@ -61,7 +62,6 @@ public class DirectMysqlDbExecutor {
                         String remarks = meta.getRemarks();
                         // 强映射获取数值
                         String value = map.get(remarks);
-                        System.out.println(value);
                         // 设置值
                         try {
                             Object o = TypeMapping.convertType(meta.getJavaType(), value);

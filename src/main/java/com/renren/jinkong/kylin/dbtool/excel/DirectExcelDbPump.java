@@ -68,7 +68,7 @@ public class DirectExcelDbPump {
      * @param inMode
      */
     public void setInMode(DbInMode inMode) {
-        this.inMode = inMode;
+        this.executor.setInMode(inMode);
     }
 
     public void setFile(File file) {

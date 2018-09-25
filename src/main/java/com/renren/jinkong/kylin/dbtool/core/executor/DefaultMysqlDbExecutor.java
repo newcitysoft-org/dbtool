@@ -56,7 +56,6 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
     public int batchDelete(DataSource source, Class clazz, List ids) {
         // 反射获取SQL和所有域
         String sql = SqlGenerator.generateDeleteSql(clazz);
-        System.out.println(sql);
         Field idField = getIdField(clazz);
         int rows = 0;
 

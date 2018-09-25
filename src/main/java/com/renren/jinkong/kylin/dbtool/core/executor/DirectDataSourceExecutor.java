@@ -26,6 +26,22 @@ public class DirectDataSourceExecutor {
         this.inMode = inMode;
     }
 
+    public String getDbTableName() {
+        return dbTableName;
+    }
+
+    public void setDbTableName(String dbTableName) {
+        this.dbTableName = dbTableName;
+    }
+
+    public DbInMode getInMode() {
+        return inMode;
+    }
+
+    public void setInMode(DbInMode inMode) {
+        this.inMode = inMode;
+    }
+
     public int batchInsert(List list) {
         if(dataSource == null) {
             throw new IllegalArgumentException("未获取数据源！");

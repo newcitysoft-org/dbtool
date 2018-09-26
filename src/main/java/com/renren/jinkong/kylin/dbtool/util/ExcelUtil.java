@@ -1,5 +1,6 @@
 package com.renren.jinkong.kylin.dbtool.util;
 
+import com.renren.jinkong.kylin.dbtool.model.Kv;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.BufferedInputStream;
@@ -57,4 +58,27 @@ public final class ExcelUtil {
         return map;
     }
 
+    /**
+     * 获取所有sheet页名称与索引的映射集合
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static List<Kv<String, Integer>> getSheetNames(File file) throws IOException {
+        List<Kv<String, Integer>> list = new ArrayList<>();
+
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+        HSSFWorkbook workbook = new HSSFWorkbook(bis);
+
+        int numberOfSheets = workbook.getNumberOfSheets();
+
+        for (int i = 0; i < numberOfSheets; i++) {
+            list.add(new Kv<>(workbook.getSheetAt(i).getSheetName(), i));
+        }
+
+        bis.close();
+
+        return list;
+    }
 }

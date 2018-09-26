@@ -1,5 +1,10 @@
 package com.renren.jinkong.kylin.dbtool.core.op;
 
+import com.renren.jinkong.kylin.dbtool.model.Kv;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 数据库插入执行操作模式
  *
@@ -10,9 +15,39 @@ public enum DbInMode {
     /**
      * 增加前删除
      */
-    DELETE_AND_ADD,
+    DELETE_AND_ADD("插入前删除已有数据"),
     /**
      * 直接增加
      */
-    ADD;
+    ADD("直接添加数据");
+
+    private String name;
+
+    DbInMode(String name) {
+        this.name = name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static List<Kv<String, String>> getModeMap() {
+        List<Kv<String, String>> kvs = new ArrayList<>();
+
+        DbInMode[] values = DbInMode.values();
+
+        for (DbInMode inMode : values) {
+            kvs.add(new Kv<>(inMode.toString(), inMode.name));
+        }
+
+        return kvs;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(get("DELETE_AND_ADD").toString());
+    }
+
+    public static DbInMode get(String mode) {
+        return Enum.valueOf(DbInMode.class, mode);
+    }
 }

@@ -2,6 +2,7 @@ package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.core.executor.DirectDataSourceExecutor;
 import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
+import com.renren.jinkong.kylin.dbtool.core.op.DbTimeDimension;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 
@@ -32,9 +33,9 @@ public class DirectExcelDbPump {
      */
     private String dbTableName;
     /**
-     * 插入模式
+     * 数据时间
      */
-    private DbInMode inMode = DbInMode.ADD;
+    private Object dayOrMonth;
     /**
      * sheet页名称
      */
@@ -54,13 +55,13 @@ public class DirectExcelDbPump {
 
     public DirectExcelDbPump(DbInfo info) {
         this.info = info;
+        this.executor = new DirectDataSourceExecutor(info);
     }
 
     public DirectExcelDbPump(String jdbcUrl, String user, String password) {
         this.info = new DbInfo(jdbcUrl, user, password);
+        this.executor = new DirectDataSourceExecutor(info);
     }
-
-
 
     /**
      * 设置插入模式
@@ -71,14 +72,17 @@ public class DirectExcelDbPump {
         this.executor.setInMode(inMode);
     }
 
+    public void setDtm(DbTimeDimension dtm) {
+        this.executor.setDtm(dtm);
+    }
+
     public void setFile(File file) {
         this.file = file;
     }
 
     public void setDbTableName(String dbTableName) {
         this.dbTableName = dbTableName;
-        // 创建直接方式的执行器对象
-        this.executor = new DirectDataSourceExecutor(info, dbTableName, inMode);
+        this.executor.setDbTableName(dbTableName);
     }
 
     public void setSheetName(String sheetName) {
@@ -104,6 +108,10 @@ public class DirectExcelDbPump {
         this.endRowNum = endRowNum;
     }
 
+    public void setDayOrMonth(Object dayOrMonth) {
+        this.dayOrMonth = dayOrMonth;
+    }
+
     /**
      * 设置数据结束行号
      *
@@ -113,8 +121,15 @@ public class DirectExcelDbPump {
         this.startRowNum = startRowNum;
     }
 
-    public int execute() throws Exception {
-        if(this.file == null) {
+    /**
+     * 批次号
+     *
+     * @param batchNo
+     * @return
+     * @throws Exception
+     */
+    public int execute(String batchNo) throws Exception {
+        if(file == null) {
             throw new IllegalArgumentException("所需导入的File对象未设置");
         }
 
@@ -124,14 +139,12 @@ public class DirectExcelDbPump {
 
         ExcelKit excelKit = new ExcelKit(file);
 
-        if(!StrKit.isBlank(this.sheetName)) {
-            excelKit.setSheet(this.sheetName);
+        if(!StrKit.isBlank(sheetName)) {
+            excelKit.setSheet(sheetName);
         }
 
-        List list = excelKit.getExcelDataMap(this.headRowNum, startRowNum, endRowNum);
+        List list = excelKit.getExcelDataMap(headRowNum, startRowNum, endRowNum);
 
-        System.out.println(list);
-
-        return executor.batchInsert(list);
+        return executor.batchInsert(list, dayOrMonth, batchNo);
     }
 }

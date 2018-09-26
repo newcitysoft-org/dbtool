@@ -3,6 +3,7 @@ package com.renren.jinkong.kylin.dbtool.core.executor;
 import com.renren.jinkong.kylin.dbtool.core.MetaBuilder;
 import com.renren.jinkong.kylin.dbtool.core.manager.DataSourceManager;
 import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
+import com.renren.jinkong.kylin.dbtool.core.op.DbTimeDimension;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 import com.renren.jinkong.kylin.dbtool.model.TableMeta;
@@ -17,13 +18,19 @@ import java.util.List;
 public class DirectDataSourceExecutor {
     private DataSource dataSource;
     private String dbTableName;
-    private DbInMode inMode;
+    private DbInMode inMode = DbInMode.ADD;
+    private DbTimeDimension dtm;
 
-    public DirectDataSourceExecutor(DbInfo info, String dbTableName, DbInMode inMode) {
+    public DirectDataSourceExecutor(DbInfo info) {
+        this.dataSource = DataSourceManager.getDsm().getDataSource(info);
+    }
+
+    public DirectDataSourceExecutor(DbInfo info, String dbTableName, DbInMode inMode, DbTimeDimension dtm) {
         dataSource = DataSourceManager.getDsm().getDataSource(info);
         // 设置对象属性
         this.dbTableName = dbTableName;
         this.inMode = inMode;
+        this.dtm = dtm;
     }
 
     public String getDbTableName() {
@@ -42,7 +49,23 @@ public class DirectDataSourceExecutor {
         this.inMode = inMode;
     }
 
-    public int batchInsert(List list) {
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public DbTimeDimension getDtm() {
+        return dtm;
+    }
+
+    public void setDtm(DbTimeDimension dtm) {
+        this.dtm = dtm;
+    }
+
+    public int batchInsert(List list, Object dayOrMonth, String batchNo) {
         if(dataSource == null) {
             throw new IllegalArgumentException("未获取数据源！");
         }
@@ -52,8 +75,8 @@ public class DirectDataSourceExecutor {
         }
 
         TableMeta tableMeta = new MetaBuilder(dataSource).build(dbTableName);
-        DirectMysqlDbExecutor executor = new DirectMysqlDbExecutor(dataSource, tableMeta, inMode);
+        DirectMysqlDbExecutor executor = new DirectMysqlDbExecutor(dataSource, tableMeta, inMode, dtm);
 
-        return executor.batchInsert(list);
+        return executor.batchInsert(list, dayOrMonth, batchNo);
     }
 }

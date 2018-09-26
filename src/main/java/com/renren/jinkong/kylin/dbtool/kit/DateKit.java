@@ -42,11 +42,18 @@ public final class DateKit {
         return sdf.parse(date);
     }
 
+    public static String getTimestamp() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssS");
+
+        return sdf.format(date);
+    }
+
     public static Date getDateByStr(String date) {
         return new Date(date);
     }
 
     public static void main(String[] args) {
-        System.out.println(getDateByStr("Sun Jun 28 00:00:00 CST 2037"));
+        System.out.println(getTimestamp());
     }
 }

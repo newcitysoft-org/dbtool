@@ -17,6 +17,10 @@ public enum DbInMode {
      */
     DELETE_AND_ADD("插入前删除已有数据"),
     /**
+     * 插入前删除某天数据
+     */
+    DELETE_DATE_AND_ADD("插入前按数据维度删除"),
+    /**
      * 直接增加
      */
     ADD("直接添加数据");
@@ -44,10 +48,10 @@ public enum DbInMode {
     }
 
     public static void main(String[] args) {
-        System.out.println(get("DELETE_AND_ADD").toString());
+        System.out.println(get("DELETE_DATE_AND_ADD").toString());
     }
 
     public static DbInMode get(String mode) {
-        return Enum.valueOf(DbInMode.class, mode);
+        return DbInMode.valueOf(mode);
     }
 }

@@ -1,5 +1,9 @@
 package com.renren.jinkong.kylin.dbtool.core.op;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
+import com.renren.jinkong.kylin.dbtool.core.Const;
+import com.renren.jinkong.kylin.dbtool.exception.DbTimeDimException;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,6 +48,15 @@ public abstract class SqlOperation {
             push(ps);
             //执行sql语句
             row = ps.executeUpdate();
+        } catch (MySQLSyntaxErrorException e) {
+            String message = e.getMessage();
+            if(message.contains(Const.FIELD_RECORD_MONTH)) {
+                throw new DbTimeDimException("该表不支持月维度！");
+            } else if(message.contains(Const.FIELD_RECORD_DAY)){
+                throw new DbTimeDimException("该表不支持日维度！");
+            } else {
+                throw new RuntimeException(e);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {

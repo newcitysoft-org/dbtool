@@ -2,14 +2,14 @@ package com.renren.jinkong.kylin.dbtool;
 
 import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
 import com.renren.jinkong.kylin.dbtool.core.op.DbTimeDimension;
-import com.renren.jinkong.kylin.dbtool.core.op.ExcelType;
+import com.renren.jinkong.kylin.dbtool.core.op.ExcelOpType;
+import com.renren.jinkong.kylin.dbtool.core.op.ExcelVersion;
 import com.renren.jinkong.kylin.dbtool.excel.DirectExcelDbPump;
 import com.renren.jinkong.kylin.dbtool.kit.DateKit;
 import com.renren.jinkong.kylin.dbtool.model.DbOpDefinition;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Date;
 
 /**
  * @author lixin.tian@renren-inc.com
@@ -104,7 +104,7 @@ public class DirectExcelDbPumpTest2 {
         definition.setStartRowNum(2);
         definition.setInMode(DbInMode.DELETE_DATE_AND_ADD);
         definition.setDtm(DbTimeDimension.MONTH);
-        definition.setExcelType(ExcelType.MONTH);
+        definition.setExcelOpType(ExcelOpType.MONTH);
         definition.setDayOrMonth("2018-09");
 
         DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
@@ -132,7 +132,7 @@ public class DirectExcelDbPumpTest2 {
         definition.setStartRowNum(2);
         definition.setInMode(DbInMode.DELETE_DATE_AND_ADD);
         definition.setDtm(DbTimeDimension.DAY);
-        definition.setExcelType(ExcelType.DAY);
+        definition.setExcelOpType(ExcelOpType.DAY);
         definition.setDayOrMonth("2018-09-27");
 
         DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
@@ -158,13 +158,39 @@ public class DirectExcelDbPumpTest2 {
 
         definition.setHeadRowNum(1);
         definition.setStartRowNum(2);
-        definition.setExcelType(ExcelType.DAY);
+        definition.setExcelOpType(ExcelOpType.DAY);
         definition.setDayOrMonth("2018-09-27");
 
         DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
 
         pump.setFile(file);
         pump.setDbTableName("tb_money_detail_his_day");
+        pump.setDefinition(definition);
+
+        int i = pump.execute(DateKit.getTimestamp());
+        System.out.println(i);
+    }
+
+    /**
+     * 直接增加
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test6() throws Exception {
+        File file = new File("D:\\data\\车商在用非抵押债.xls");
+
+        DbOpDefinition definition = new DbOpDefinition();
+
+        definition.setInMode(DbInMode.ADD);
+        definition.setHeadRowNum(1);
+        definition.setStartRowNum(2);
+        definition.setVersion(ExcelVersion.VERSION_2003);
+
+        DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+
+        pump.setFile(file);
+        pump.setDbTableName("dt_car_dealer_non_mortgage");
         pump.setDefinition(definition);
 
         int i = pump.execute(DateKit.getTimestamp());

@@ -83,6 +83,8 @@ public class DirectExcelDbPump {
             excelKit.setSheet(definition.getSheetName());
         }
 
+        excelKit.setVersion(definition.getVersion());
+
         List list = excelKit.getExcelDataMap(definition.getHeadRowNum(),
                 definition.getStartRowNum(),
                 definition.getEndRowNum());

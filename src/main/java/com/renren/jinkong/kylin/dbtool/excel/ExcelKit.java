@@ -1,8 +1,11 @@
 package com.renren.jinkong.kylin.dbtool.excel;
 
+import com.renren.jinkong.kylin.dbtool.core.op.ExcelVersion;
 import com.renren.jinkong.kylin.dbtool.kit.ReflectKit;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -19,6 +22,7 @@ class ExcelKit {
     private Class clazz;
     private File file;
     private Sheet sheet;
+    private ExcelVersion version;
 
     public ExcelKit(File file) {
         this.file = file;
@@ -41,6 +45,31 @@ class ExcelKit {
         return this.sheet;
     }
 
+    public void setVersion(ExcelVersion version) {
+        this.version = version;
+    }
+
+    private Workbook createWorkbook() throws Exception {
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+        Workbook workbook;
+
+        switch (version) {
+            case VERSION_2003:
+                workbook = new HSSFWorkbook(bis);
+                break;
+            case VERSION_2007:
+                workbook = new XSSFWorkbook(bis);
+                break;
+            default:
+                workbook = new XSSFWorkbook(bis);
+                break;
+        }
+
+        bis.close();
+
+        return workbook;
+    }
+
     /**
      * 默认设置sheet页
      *
@@ -48,14 +77,13 @@ class ExcelKit {
      * @throws Exception
      */
     private void setSheet() throws Exception {
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-        HSSFWorkbook workbook = new HSSFWorkbook(bis);
+        Workbook workbook = createWorkbook();
 
         int activeSheetIndex = workbook.getActiveSheetIndex();
         // 读取活动的sheet页
         this.sheet = workbook.getSheetAt(activeSheetIndex);
 
-        bis.close();
+
     }
 
     /**
@@ -65,12 +93,9 @@ class ExcelKit {
      * @throws Exception
      */
     public void setSheet(String sheetName) throws Exception {
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-        HSSFWorkbook workbook = new HSSFWorkbook(bis);
+        Workbook workbook = createWorkbook();
         // 根据指定的sheet名获取sheet页
         this.sheet = workbook.getSheet(sheetName);
-
-        bis.close();
     }
 
     /**
@@ -80,13 +105,9 @@ class ExcelKit {
      * @throws Exception
      */
     public void setSheet(int row) throws Exception {
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-        HSSFWorkbook workbook = new HSSFWorkbook(bis);
-
+        Workbook workbook = createWorkbook();
         // 读取第一个sheet
         this.sheet = workbook.getSheetAt(row);
-
-        bis.close();
     }
 
 

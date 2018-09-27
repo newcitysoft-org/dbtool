@@ -35,7 +35,7 @@ public enum DbInMode {
         this.name = name;
     }
 
-    public static List<Kv<String, String>> getModes(ExcelType type) {
+    public static List<Kv<String, String>> getModes(ExcelOpType type) {
         List<Kv<String, String>> kvs = new ArrayList<>();
         List<DbInMode> inModes = new ArrayList<>();
 

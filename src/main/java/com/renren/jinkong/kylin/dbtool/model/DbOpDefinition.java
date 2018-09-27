@@ -2,7 +2,8 @@ package com.renren.jinkong.kylin.dbtool.model;
 
 import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
 import com.renren.jinkong.kylin.dbtool.core.op.DbTimeDimension;
-import com.renren.jinkong.kylin.dbtool.core.op.ExcelType;
+import com.renren.jinkong.kylin.dbtool.core.op.ExcelOpType;
+import com.renren.jinkong.kylin.dbtool.core.op.ExcelVersion;
 import com.renren.jinkong.kylin.dbtool.kit.DateKit;
 
 import java.text.ParseException;
@@ -22,7 +23,8 @@ public class DbOpDefinition {
         DEFAULT_DEFINITION.startRowNum = 1;
         DEFAULT_DEFINITION.endRowNum = 0;
         DEFAULT_DEFINITION.inMode = DbInMode.ADD;
-        DEFAULT_DEFINITION.excelType = ExcelType.ALL;
+        DEFAULT_DEFINITION.excelOpType = ExcelOpType.ALL;
+        DEFAULT_DEFINITION.version = ExcelVersion.VERSION_2007;
     }
 
     /**
@@ -46,7 +48,9 @@ public class DbOpDefinition {
      */
     private int endRowNum;
 
-    private ExcelType excelType;
+    private ExcelOpType excelOpType;
+
+    private ExcelVersion version;
 
     private DbTimeDimension dtm;
 
@@ -110,14 +114,14 @@ public class DbOpDefinition {
         this.endRowNum = endRowNum;
     }
 
-    public ExcelType getExcelType() {
-        return excelType;
+    public ExcelOpType getExcelOpType() {
+        return excelOpType;
     }
 
-    public void setExcelType(ExcelType excelType) {
-        this.excelType = excelType;
+    public void setExcelOpType(ExcelOpType excelOpType) {
+        this.excelOpType = excelOpType;
 
-        switch (excelType) {
+        switch (excelOpType) {
             case MONTH:
                 this.inMode = DbInMode.DELETE_DATE_AND_ADD;
                 this.dtm = DbTimeDimension.MONTH;
@@ -129,6 +133,14 @@ public class DbOpDefinition {
             default:
                 break;
         }
+    }
+
+    public ExcelVersion getVersion() {
+        return version;
+    }
+
+    public void setVersion(ExcelVersion version) {
+        this.version = version;
     }
 
     public DbTimeDimension getDtm() {

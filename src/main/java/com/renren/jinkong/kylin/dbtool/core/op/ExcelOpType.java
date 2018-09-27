@@ -9,7 +9,7 @@ import java.util.List;
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/26 17:38
  */
-public enum ExcelType {
+public enum ExcelOpType {
     /**
      * 月维度
      */
@@ -25,7 +25,7 @@ public enum ExcelType {
 
     private String type;
 
-    ExcelType(String type) {
+    ExcelOpType(String type) {
         this.type = type;
     }
 
@@ -40,10 +40,10 @@ public enum ExcelType {
     public static List<Kv<String, String>> getTypes() {
         List<Kv<String, String>> kvs = new ArrayList<>();
 
-        ExcelType[] values = ExcelType.values();
+        ExcelOpType[] values = ExcelOpType.values();
 
-        for (ExcelType excelType : values) {
-            kvs.add(new Kv<>(excelType.toString(), excelType.type));
+        for (ExcelOpType excelOpType : values) {
+            kvs.add(new Kv<>(excelOpType.toString(), excelOpType.type));
         }
 
         return kvs;
@@ -53,8 +53,8 @@ public enum ExcelType {
         System.out.println(get("MONTH").toString());
     }
 
-    public static ExcelType get(String mode) {
-        return ExcelType.valueOf(mode);
+    public static ExcelOpType get(String mode) {
+        return ExcelOpType.valueOf(mode);
     }
 
 }

@@ -181,3 +181,182 @@
     pump.setEndRowNum(20);
     // 执行并获取所影响行数
     int i = pump.execute();
+    
+    
+### 第二版本：直接表格强映射到数据库表
+
+* 注意：目前的提前删除为假删除操作；执行操作需客户端提供批次号。
+#### 使用案例
+
+    package com.renren.jinkong.kylin.dbtool;
+    
+    import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
+    import com.renren.jinkong.kylin.dbtool.core.op.DbTimeDimension;
+    import com.renren.jinkong.kylin.dbtool.core.op.ExcelType;
+    import com.renren.jinkong.kylin.dbtool.excel.DirectExcelDbPump;
+    import com.renren.jinkong.kylin.dbtool.kit.DateKit;
+    import com.renren.jinkong.kylin.dbtool.model.DbOpDefinition;
+    import org.junit.Test;
+    
+    import java.io.File;
+    import java.util.Date;
+    
+    /**
+     * @author lixin.tian@renren-inc.com
+     * @date 2018/9/20 13:24
+     */
+    public class DirectExcelDbPumpTest2 {
+    
+        private static final String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+        private static final String user = "root";
+        private static final String password = "root";
+    
+        /**
+         * 默认添加（直接增加）
+         * 采用默认的数据定义
+         * @throws Exception
+         */
+        @Test
+        public void test0() throws Exception {
+            File file = new File("D:\\data\\车商资本金明细2.xls");
+    
+            DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+    
+            pump.setFile(file);
+            pump.setDbTableName("tb_money_detail");
+    
+            int i = pump.execute(DateKit.getTimestamp());
+            System.out.println(i);
+        }
+    
+        /**
+         * 直接增加
+         *
+         * @throws Exception
+         */
+        @Test
+        public void test1() throws Exception {
+            File file = new File("D:\\data\\车商资本金明细.xls");
+    
+            DbOpDefinition definition = new DbOpDefinition();
+    
+            definition.setInMode(DbInMode.ADD);
+            definition.setHeadRowNum(1);
+            definition.setStartRowNum(2);
+    
+            DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+    
+            pump.setFile(file);
+            pump.setDbTableName("tb_money_detail");
+            pump.setDefinition(definition);
+    
+            int i = pump.execute(DateKit.getTimestamp());
+            System.out.println(i);
+        }
+    
+        /**
+         * 全删全增
+         *
+         * @throws Exception
+         */
+        @Test
+        public void test2() throws Exception {
+            File file = new File("D:\\data\\车商资本金明细.xls");
+            // 创建数据定义对象
+            DbOpDefinition definition = new DbOpDefinition();
+            // 设置数据插入模式（该模式可以不设置）
+            definition.setInMode(DbInMode.DELETE_AND_ADD);
+            definition.setHeadRowNum(1);
+            definition.setStartRowNum(2);
+    
+            DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+    
+            pump.setFile(file);
+            pump.setDbTableName("tb_money_detail");
+            pump.setDefinition(definition);
+    
+            int i = pump.execute(DateKit.getTimestamp());
+            System.out.println(i);
+        }
+    
+        /**
+         * 月维度替换添加
+         *
+         * @throws Exception
+         */
+        @Test
+        public void test3() throws Exception {
+            File file = new File("D:\\data\\车商资本金明细.xls");
+    
+            DbOpDefinition definition = new DbOpDefinition();
+    
+            definition.setHeadRowNum(1);
+            definition.setStartRowNum(2);
+            definition.setInMode(DbInMode.DELETE_DATE_AND_ADD);
+            definition.setDtm(DbTimeDimension.MONTH);
+            definition.setExcelType(ExcelType.MONTH);
+            definition.setDayOrMonth("2018-09");
+    
+            DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+    
+            pump.setFile(file);
+            pump.setDbTableName("tb_money_detail_his_month");
+            pump.setDefinition(definition);
+    
+            int i = pump.execute(DateKit.getTimestamp());
+            System.out.println(i);
+        }
+    
+        /**
+         * 日维度替换添加
+         *
+         * @throws Exception
+         */
+        @Test
+        public void test4() throws Exception {
+            File file = new File("D:\\data\\车商资本金明细.xls");
+    
+            DbOpDefinition definition = new DbOpDefinition();
+    
+            definition.setHeadRowNum(1);
+            definition.setStartRowNum(2);
+            definition.setInMode(DbInMode.DELETE_DATE_AND_ADD);
+            definition.setDtm(DbTimeDimension.DAY);
+            definition.setExcelType(ExcelType.DAY);
+            definition.setDayOrMonth("2018-09-27");
+    
+            DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+    
+            pump.setFile(file);
+            pump.setDbTableName("tb_money_detail_his_day");
+            pump.setDefinition(definition);
+    
+            int i = pump.execute(DateKit.getTimestamp());
+            System.out.println(i);
+        }
+    
+        /**
+         * 日维度替换添加（简化版本）
+         *
+         * @throws Exception
+         */
+        @Test
+        public void test5() throws Exception {
+            File file = new File("D:\\data\\车商资本金明细.xls");
+    
+            DbOpDefinition definition = new DbOpDefinition();
+    
+            definition.setHeadRowNum(1);
+            definition.setStartRowNum(2);
+            definition.setExcelType(ExcelType.DAY);
+            definition.setDayOrMonth("2018-09-27");
+    
+            DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+    
+            pump.setFile(file);
+            pump.setDbTableName("tb_money_detail_his_day");
+            pump.setDefinition(definition);
+    
+            int i = pump.execute(DateKit.getTimestamp());
+            System.out.println(i);
+        }

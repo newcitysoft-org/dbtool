@@ -2,6 +2,7 @@ package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.core.op.ExcelVersion;
 import com.renren.jinkong.kylin.dbtool.kit.ReflectKit;
+import com.renren.jinkong.kylin.dbtool.model.Kv;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -10,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ import java.util.Map;
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/20 11:47
  */
-class ExcelKit {
+public class ExcelKit {
 
     private Class clazz;
     private File file;
@@ -216,4 +218,23 @@ class ExcelKit {
         return dataListMap;
     }
 
+    /**
+     * 获取所有sheet页名称与索引的映射集合
+     *
+     * @return
+     * @throws Exception
+     */
+    public List<Kv<String, Integer>> getSheetNames() throws Exception {
+        List<Kv<String, Integer>> list = new ArrayList<>();
+
+        Workbook workbook = createWorkbook();
+
+        int numberOfSheets = workbook.getNumberOfSheets();
+
+        for (int i = 0; i < numberOfSheets; i++) {
+            list.add(new Kv<>(workbook.getSheetAt(i).getSheetName(), i));
+        }
+
+        return list;
+    }
 }

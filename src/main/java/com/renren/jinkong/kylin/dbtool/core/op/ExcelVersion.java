@@ -14,11 +14,11 @@ public enum ExcelVersion {
     /**
      * 2003版本
      */
-    VERSION_2003("2003"),
+    VERSION_2003("97-2003.xls"),
     /**
      * 2007版本
      */
-    VERSION_2007("2007");
+    VERSION_2007("2007.xlsx");
 
     private String type;
 

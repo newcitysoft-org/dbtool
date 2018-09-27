@@ -75,7 +75,7 @@ public class DirectMysqlDbExecutor {
     }
 
 
-    public int insert(String sql, Map<String, String> map, Object dateOrMonth, String batchNo) {
+    public int insert(String sql, final Map<String, String> map, final Object dateOrMonth, final String batchNo) {
         int row = new SqlOperation(source, sql) {
 
             @Override
@@ -132,7 +132,7 @@ public class DirectMysqlDbExecutor {
 //        return row;
 //    }
 
-    public int fakeDelete(TableMeta tableMeta, String timestamp) {
+    public int fakeDelete(TableMeta tableMeta, final String timestamp) {
         String sql = "update " + tableMeta.getName() + " set record_state=?,record_batch_no=?";
 
         int row = new SqlOperation(source, sql) {
@@ -151,7 +151,7 @@ public class DirectMysqlDbExecutor {
         return row;
     }
 
-    public int fakeDeleteByMonth(TableMeta tableMeta, Object month, String timestamp) {
+    public int fakeDeleteByMonth(TableMeta tableMeta, final Object month, final String timestamp) {
         String sql = "update " + tableMeta.getName() + " set record_state=?,record_batch_no=? where record_month=?";
 
         int row = new SqlOperation(source, sql) {
@@ -208,7 +208,7 @@ public class DirectMysqlDbExecutor {
 //        return row;
 //    }
 
-    public int fakeDeleteByDay(TableMeta tableMeta, Object day, String timestamp) {
+    public int fakeDeleteByDay(TableMeta tableMeta, final Object day, final String timestamp) {
         String sql = "update " + tableMeta.getName() + " set record_state=?,record_batch_no=? where record_dt=?";
 
         int row = new SqlOperation(source, sql) {

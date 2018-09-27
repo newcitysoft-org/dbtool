@@ -74,7 +74,7 @@ public class ExcelMapper {
         Row root = sheet.getRow(headRowNum);
         short lastCellNum = root.getLastCellNum();
 
-        Map<String, Integer> map = new HashMap<>(lastCellNum);
+        Map<String, Integer> map = new HashMap<String, Integer>(lastCellNum);
 
         for(int i = 0; i < lastCellNum; i++) {
             String title = getCellValue(root.getCell(i));
@@ -94,7 +94,7 @@ public class ExcelMapper {
      */
     public List<Map<String, String>> getDataListMap() {
         Map<String, Integer> headMap = getHeadMap();
-        List<Map<String, String>> dataListMap = new LinkedList<>();
+        List<Map<String, String>> dataListMap = new LinkedList<Map<String, String>>();
         if(endRowNum == 0) {
             endRowNum = sheet.getLastRowNum();
         }
@@ -104,7 +104,7 @@ public class ExcelMapper {
             Row row = sheet.getRow(i);
             // 判断是否为空行
             if(!isRowEmpty(row)) {
-                Map<String, String> dataMap = new HashMap<>(headMap.size());
+                Map<String, String> dataMap = new HashMap<String, String>(headMap.size());
                 // 获取每行对应的数据
                 for(Map.Entry<String, Integer> head : headMap.entrySet()) {
                     String cellName = head.getKey();

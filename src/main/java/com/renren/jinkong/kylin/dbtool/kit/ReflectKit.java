@@ -24,7 +24,7 @@ public final class ReflectKit {
      * @return
      */
     public static List<Field> getFields(Class clazz) {
-        List<Field> fieldList = new LinkedList<>();
+        List<Field> fieldList = new LinkedList<Field>();
 
         Field[] fields = clazz.getDeclaredFields();
 
@@ -63,7 +63,6 @@ public final class ReflectKit {
     }
 
     public static Object convertType(Field field, String value) {
-//        System.out.println(value);
         Object result = null;
 
         if(value == null || value.equals("")) {
@@ -72,27 +71,16 @@ public final class ReflectKit {
 
         String type = field.getGenericType().toString();
 
-        switch (type) {
-            case "class java.lang.String":
-                result = value;
-                break;
-            case "class java.lang.Integer":
-            case "int":
-                result = Integer.parseInt(value);
-                break;
-            case "class java.lang.Double":
-            case "double":
-                result = Double.parseDouble(value);
-                break;
-            case "class java.lang.Boolean":
-            case "boolean":
-                result = Boolean.parseBoolean(value);
-                break;
-            case "class java.util.Date":
-                result = DateKit.getDateByStr(value);
-                break;
-            default:
-                break;
+        if(type.equals("class java.lang.String")) {
+            result = value;
+        } else if(type.equals("class java.lang.Integer") || type.equals("int")) {
+            result = Integer.parseInt(value);
+        } else if(type.equals("class java.lang.Double") || type.equals("double")) {
+            result = Double.parseDouble(value);
+        } else if(type.equals("class java.lang.Boolean") || type.equals("boolean")) {
+            result = Boolean.parseBoolean(value);
+        } else if(type.equals("class java.util.Date")) {
+            result = DateKit.getDateByStr(value);
         }
 
         return result;

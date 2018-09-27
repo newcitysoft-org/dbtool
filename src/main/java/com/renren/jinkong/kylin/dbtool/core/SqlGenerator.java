@@ -17,9 +17,9 @@ import static com.renren.jinkong.kylin.dbtool.kit.ReflectKit.getIdField;
  */
 public class SqlGenerator {
 
-    private static final ConcurrentHashMap<Class, String> sqlMap = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Class, String> sqlUpdateMap = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Class, String> sqlDeleteMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class, String> sqlMap = new ConcurrentHashMap<Class, String>();
+    private static final ConcurrentHashMap<Class, String> sqlUpdateMap = new ConcurrentHashMap<Class, String>();
+    private static final ConcurrentHashMap<Class, String> sqlDeleteMap = new ConcurrentHashMap<Class, String>();
 
     /**
      * 生成动态SQL语句

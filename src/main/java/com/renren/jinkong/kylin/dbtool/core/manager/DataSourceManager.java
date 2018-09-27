@@ -26,7 +26,7 @@ public final class DataSourceManager implements DsManager {
     /**
      * 定义连接和DataSource的映射
      */
-    private static final ConcurrentHashMap<String, DataSource> map = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, DataSource> map = new ConcurrentHashMap<String, DataSource>();
 
     /**
      * 获取数据源

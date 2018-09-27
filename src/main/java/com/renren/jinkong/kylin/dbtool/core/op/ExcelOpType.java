@@ -39,12 +39,12 @@ public enum ExcelOpType {
     }
 
     public static List<Kv<String, String>> getTypes() {
-        List<Kv<String, String>> kvs = new ArrayList<>();
+        List<Kv<String, String>> kvs = new ArrayList<Kv<String, String>>();
 
         ExcelOpType[] values = ExcelOpType.values();
 
         for (ExcelOpType excelOpType : values) {
-            kvs.add(new Kv<>(excelOpType.toString(), excelOpType.type));
+            kvs.add(new Kv<String, String>(excelOpType.toString(), excelOpType.type));
         }
 
         return kvs;

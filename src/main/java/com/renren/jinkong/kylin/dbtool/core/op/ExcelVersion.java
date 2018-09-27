@@ -36,12 +36,12 @@ public enum ExcelVersion {
     }
 
     public static List<Kv<String, String>> getTypes() {
-        List<Kv<String, String>> kvs = new ArrayList<>();
+        List<Kv<String, String>> kvs = new ArrayList<Kv<String, String>>();
 
         ExcelVersion[] values = ExcelVersion.values();
 
         for (ExcelVersion version : values) {
-            kvs.add(new Kv<>(version.toString(), version.type));
+            kvs.add(new Kv<String, String>(version.toString(), version.type));
         }
 
         return kvs;

@@ -61,13 +61,14 @@ public class MetaBuilder {
 
 	protected void buildColumnMetaOthers(TableMeta tableMeta) {
 		List<ColumnMeta> columnMetas = tableMeta.getColumnMetas();
-		columnMetas.forEach(columnMeta -> {
+
+		for(ColumnMeta meta : columnMetas) {
 			try {
-				buildColumnOtherAttr(tableMeta, columnMeta);
+				buildColumnOtherAttr(tableMeta, meta);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		});
+		}
 	}
 
 	protected void buildPrimaryKey(TableMeta tableMeta) throws SQLException {

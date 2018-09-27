@@ -44,12 +44,12 @@ public enum  DbTimeDimension {
     }
 
     public static List<Kv<String, String>> getDims() {
-        List<Kv<String, String>> kvs = new ArrayList<>();
+        List<Kv<String, String>> kvs = new ArrayList<Kv<String, String>>();
 
         DbTimeDimension[] values = DbTimeDimension.values();
 
         for (DbTimeDimension timeDimension : values) {
-            kvs.add(new Kv<>(timeDimension.toString(), timeDimension.name));
+            kvs.add(new Kv<String, String>(timeDimension.toString(), timeDimension.name));
         }
 
         return kvs;

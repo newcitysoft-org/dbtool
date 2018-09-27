@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DirectSqlGenerator {
 
-    private static final ConcurrentHashMap<String, String> sqlMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, String> sqlMap = new ConcurrentHashMap<String, String>();
 
     /**
      * 生成动态SQL语句

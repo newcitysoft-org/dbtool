@@ -28,7 +28,7 @@ public class TableMeta implements Serializable {
 	/**
 	 * 字段 meta
 	 */
-	public List<ColumnMeta> columnMetas = new ArrayList<>();
+	public List<ColumnMeta> columnMetas = new ArrayList<ColumnMeta>();
 
 	public String getName() {
 		return name;

@@ -36,8 +36,8 @@ public enum DbInMode {
     }
 
     public static List<Kv<String, String>> getModes(ExcelOpType type) {
-        List<Kv<String, String>> kvs = new ArrayList<>();
-        List<DbInMode> inModes = new ArrayList<>();
+        List<Kv<String, String>> kvs = new ArrayList<Kv<String, String>>();
+        List<DbInMode> inModes = new ArrayList<DbInMode>();
 
         switch (type) {
             case MONTH:
@@ -53,7 +53,7 @@ public enum DbInMode {
         }
 
         for (DbInMode inMode : inModes) {
-            kvs.add(new Kv<>(inMode.toString(), inMode.name));
+            kvs.add(new Kv<String, String>(inMode.toString(), inMode.name));
         }
 
         return kvs;

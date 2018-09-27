@@ -1,6 +1,5 @@
 package com.renren.jinkong.kylin.dbtool.util;
 
-import com.renren.jinkong.kylin.dbtool.model.Kv;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.BufferedInputStream;
@@ -20,7 +19,7 @@ public final class ExcelUtil {
     private ExcelUtil() {}
 
     public static List<String> getAllSheetName(File file) throws IOException {
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
 
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         HSSFWorkbook workbook = new HSSFWorkbook(bis);
@@ -40,7 +39,7 @@ public final class ExcelUtil {
 
 
     public static Map<String, Integer> getAllSheetNameIndexMap(File file) throws IOException {
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<String, Integer>();
 
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         HSSFWorkbook workbook = new HSSFWorkbook(bis);

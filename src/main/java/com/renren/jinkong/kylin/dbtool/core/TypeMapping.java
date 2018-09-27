@@ -79,42 +79,26 @@ public class TypeMapping {
 			return null;
 		}
 
-		switch (type) {
-			case "java.lang.String":
-				result = value;
-				break;
-			case "java.lang.Integer":
-			case "int":
-				result = Integer.parseInt(value);
-				break;
-			case "java.lang.Double":
-			case "double":
-				result = Double.parseDouble(value);
-				break;
-			case "java.lang.Boolean":
-			case "boolean":
-				result = Boolean.parseBoolean(value);
-				break;
-			case "java.util.Date":
-				result = DateKit.getDateByStr(value);
-				break;
-			case "java.lang.Long":
-				result = Long.valueOf(value);
-				break;
-			case "java.lang.Float":
-				result = Float.parseFloat(value);
-				break;
-			case "java.lang.Byte":
-				result = Byte.parseByte(value);
-				break;
-			case "java.math.BigDecimal":
-				result = new BigDecimal(value);
-				break;
-			case "java.math.BigInteger":
-				result = new BigInteger(value);
-				break;
-			default:
-				break;
+		if(type.equals("java.lang.String")) {
+			result = value;
+		} else if(type.equals("java.lang.Integer") || type.equals("int")) {
+			result = Integer.parseInt(value);
+		} else if(type.equals("java.lang.Double") || type.equals("double")) {
+			result = Double.parseDouble(value);
+		} else if(type.equals("java.lang.Boolean") || type.equals("boolean")) {
+			result = Boolean.parseBoolean(value);
+		} else if(type.equals("java.util.Date")) {
+			result = DateKit.getDateByStr(value);
+		} else if(type.equals("java.lang.Long")) {
+			result = Long.valueOf(value);
+		} else if(type.equals("java.lang.Float")) {
+			result = Float.parseFloat(value);
+		} else if(type.equals("java.lang.Byte")) {
+			result = Byte.parseByte(value);
+		} else if(type.equals("java.math.BigDecimal")) {
+			result = new BigDecimal(value);
+		} else if(type.equals("java.math.BigInteger")) {
+			result = new BigInteger(value);
 		}
 
 		return result;

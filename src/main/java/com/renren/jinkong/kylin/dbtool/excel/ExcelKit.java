@@ -225,14 +225,14 @@ public class ExcelKit {
      * @throws Exception
      */
     public List<Kv<String, Integer>> getSheetNames() throws Exception {
-        List<Kv<String, Integer>> list = new ArrayList<>();
+        List<Kv<String, Integer>> list = new ArrayList<Kv<String, Integer>>();
 
         Workbook workbook = createWorkbook();
 
         int numberOfSheets = workbook.getNumberOfSheets();
 
         for (int i = 0; i < numberOfSheets; i++) {
-            list.add(new Kv<>(workbook.getSheetAt(i).getSheetName(), i));
+            list.add(new Kv<String, Integer>(workbook.getSheetAt(i).getSheetName(), i));
         }
 
         return list;

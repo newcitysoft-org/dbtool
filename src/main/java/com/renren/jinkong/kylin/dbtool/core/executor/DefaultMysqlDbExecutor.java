@@ -77,7 +77,7 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
      * @param obj 插入对象
      * @return
      */
-    private int insert(DataSource dataSource, String sql, List<Field> fieldList, Object obj) {
+    private int insert(DataSource dataSource, String sql, final List<Field> fieldList, final Object obj) {
         int row = new SqlOperation(dataSource, sql) {
 
             @Override
@@ -101,7 +101,8 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
         return row;
     }
 
-    private int update(DataSource dataSource, String sql, List<Field> fieldList, Field idField, Object obj) {
+    private int update(DataSource dataSource, String sql, final List<Field> fieldList, final Field idField,
+                       final Object obj) {
         int row = new SqlOperation(dataSource, sql) {
 
             @Override
@@ -129,7 +130,7 @@ public class DefaultMysqlDbExecutor implements DbExecutor {
         return row;
     }
 
-    private int delete(DataSource dataSource, String sql, Field idField, Object id) {
+    private int delete(DataSource dataSource, String sql, final Field idField, final Object id) {
         int row = new SqlOperation(dataSource, sql) {
             @Override
             public void push(PreparedStatement ps) {

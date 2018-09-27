@@ -116,6 +116,19 @@ public class DbOpDefinition {
 
     public void setExcelType(ExcelType excelType) {
         this.excelType = excelType;
+
+        switch (excelType) {
+            case MONTH:
+                this.inMode = DbInMode.DELETE_DATE_AND_ADD;
+                this.dtm = DbTimeDimension.MONTH;
+                break;
+            case DAY:
+                this.inMode = DbInMode.DELETE_DATE_AND_ADD;
+                this.dtm = DbTimeDimension.DAY;
+                break;
+            default:
+                break;
+        }
     }
 
     public DbTimeDimension getDtm() {

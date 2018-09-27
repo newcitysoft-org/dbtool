@@ -60,6 +60,6 @@ public enum  DbTimeDimension {
     }
 
     public static DbTimeDimension get(String mode) {
-        return Enum.valueOf(DbTimeDimension.class, mode);
+        return valueOf(mode);
     }
 }

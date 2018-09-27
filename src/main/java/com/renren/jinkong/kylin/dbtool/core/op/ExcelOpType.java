@@ -1,5 +1,6 @@
 package com.renren.jinkong.kylin.dbtool.core.op;
 
+import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.Kv;
 
 import java.util.ArrayList;
@@ -54,6 +55,10 @@ public enum ExcelOpType {
     }
 
     public static ExcelOpType get(String mode) {
+        if(mode == null || StrKit.isBlank(mode)) {
+            return ALL;
+        }
+
         return ExcelOpType.valueOf(mode);
     }
 

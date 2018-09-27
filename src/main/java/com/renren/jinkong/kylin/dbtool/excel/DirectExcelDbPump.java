@@ -78,12 +78,12 @@ public class DirectExcelDbPump {
         }
 
         ExcelKit excelKit = new ExcelKit(file);
-
+        // 提前设置表格版本
+        excelKit.setVersion(definition.getVersion());
+        // 设置sheet页
         if(!StrKit.isBlank(definition.getSheetName())) {
             excelKit.setSheet(definition.getSheetName());
         }
-
-        excelKit.setVersion(definition.getVersion());
 
         List list = excelKit.getExcelDataMap(definition.getHeadRowNum(),
                 definition.getStartRowNum(),

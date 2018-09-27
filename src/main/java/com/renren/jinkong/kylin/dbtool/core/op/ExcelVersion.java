@@ -1,5 +1,6 @@
 package com.renren.jinkong.kylin.dbtool.core.op;
 
+import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.Kv;
 
 import java.util.ArrayList;
@@ -46,4 +47,11 @@ public enum ExcelVersion {
         return kvs;
     }
 
+    public static ExcelVersion get(String version) {
+        if(version == null || StrKit.isBlank(version)) {
+            return VERSION_2007;
+        }
+
+        return valueOf(version);
+    }
 }

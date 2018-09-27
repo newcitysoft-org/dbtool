@@ -35,12 +35,24 @@ public enum DbInMode {
         this.name = name;
     }
 
-    public static List<Kv<String, String>> getModeMap() {
+    public static List<Kv<String, String>> getModes(ExcelType type) {
         List<Kv<String, String>> kvs = new ArrayList<>();
+        List<DbInMode> inModes = new ArrayList<>();
 
-        DbInMode[] values = DbInMode.values();
+        switch (type) {
+            case MONTH:
+            case DAY:
+                inModes.add(DELETE_DATE_AND_ADD);
+                inModes.add(ADD);
+                break;
+            case ALL:
+                inModes.add(DELETE_AND_ADD);
+                inModes.add(ADD);
+            default:
+                break;
+        }
 
-        for (DbInMode inMode : values) {
+        for (DbInMode inMode : inModes) {
             kvs.add(new Kv<>(inMode.toString(), inMode.name));
         }
 

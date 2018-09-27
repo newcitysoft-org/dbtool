@@ -53,10 +53,6 @@ public class DirectDataSourceExecutor {
         return dataSource;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
     public DbTimeDimension getDtm() {
         return dtm;
     }

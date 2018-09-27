@@ -13,11 +13,11 @@ public enum  DbTimeDimension {
     /**
      * 月维度
      */
-    MONTH("月", "record_dt"),
+    MONTH("月", "record_month"),
     /**
      * 日期维度
      */
-    DAY("日", "record_value");
+    DAY("日", "record_dt");
 
     private String name;
     private String value;

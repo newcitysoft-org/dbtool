@@ -6,8 +6,7 @@ package com.renren.jinkong.kylin.dbtool.exception;
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/26 16:53
  */
-public class DbTimeDimException extends RuntimeException {
-
+public class DbTimeDimException extends DbToolException {
     public DbTimeDimException() {
         super();
     }

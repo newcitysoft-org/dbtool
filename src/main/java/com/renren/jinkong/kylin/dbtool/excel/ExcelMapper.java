@@ -115,7 +115,7 @@ public class ExcelMapper {
                     String cellName = head.getKey();
                     String cellValue = getCellValue(row.getCell(head.getValue()));
                     // 添加数据
-                    dataMap.put(cellName, cellValue);
+                    dataMap.put(cellName.trim(), cellValue.trim());
                 }
 
                 dataListMap.add(dataMap);

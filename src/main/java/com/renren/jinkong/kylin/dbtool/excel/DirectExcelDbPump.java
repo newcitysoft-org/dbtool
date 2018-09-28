@@ -127,8 +127,10 @@ public class DirectExcelDbPump {
     private boolean fieldCheck(List<String> heads, List<String> tableFields) {
         int count = 0;
 
+        List<String> trims = StrKit.trims(tableFields);
+
         for(String head : heads) {
-            if(tableFields.contains(head)) {
+            if(trims.contains(head.trim())) {
                 count++;
             }
         }

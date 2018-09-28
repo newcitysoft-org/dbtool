@@ -98,7 +98,7 @@ public class DirectMysqlDbExecutor {
                             o = batchNo;
                         } else{
                             // 获取字段备注
-                            String remarks = meta.getRemarks();
+                            String remarks = meta.getRemarks().trim();
                             // 强映射获取数值
                             String value = map.get(remarks);
                             // 设置值

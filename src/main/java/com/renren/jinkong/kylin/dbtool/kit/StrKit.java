@@ -1,5 +1,8 @@
 package com.renren.jinkong.kylin.dbtool.kit;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * StrKit.
  */
@@ -141,6 +144,16 @@ public class StrKit {
 	
 	public static String getRandomUUID() {
 		return java.util.UUID.randomUUID().toString().replace("-", "");
+	}
+
+	public static List<String> trims(List<String> list) {
+		List<String> _list = new LinkedList<String>();
+
+		for (String str : list) {
+			_list.add(str.trim());
+		}
+
+		return _list;
 	}
 }
 

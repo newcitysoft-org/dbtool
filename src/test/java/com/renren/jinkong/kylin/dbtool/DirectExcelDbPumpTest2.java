@@ -17,9 +17,9 @@ import java.io.File;
  */
 public class DirectExcelDbPumpTest2 {
 
-    private static final String url = "jdbc:mysql://localhost:3306/springboot_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+    private static final String url = "jdbc:mysql://10.4.82.150:3306/data_warehouse?useUnicode=true&&characterEncoding=utf-8&allowMultiQueries=true";
     private static final String user = "root";
-    private static final String password = "root";
+    private static final String password = "123456";
 
     /**
      * 默认添加（直接增加）
@@ -191,6 +191,32 @@ public class DirectExcelDbPumpTest2 {
 
         pump.setFile(file);
         pump.setDbTableName("dt_car_dealer_non_mortgage");
+        pump.setDefinition(definition);
+
+        int i = pump.execute(DateKit.getTimestamp());
+        System.out.println(i);
+    }
+
+    /**
+     * 直接增加
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test76() throws Exception {
+        File file = new File("D:\\data\\车商资本金明细.xlsx");
+
+        DbOpDefinition definition = new DbOpDefinition();
+
+        definition.setInMode(DbInMode.DELETE_AND_ADD);
+        definition.setHeadRowNum(1);
+        definition.setStartRowNum(2);
+        definition.setVersion(ExcelVersion.VERSION_2007);
+
+        DirectExcelDbPump pump = new DirectExcelDbPump(url, user, password);
+
+        pump.setFile(file);
+        pump.setDbTableName("dt_money_detail");
         pump.setDefinition(definition);
 
         int i = pump.execute(DateKit.getTimestamp());

@@ -1,12 +1,14 @@
 package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.core.executor.DirectDataSourceExecutor;
+import com.renren.jinkong.kylin.dbtool.exception.ExcelDataNoMatchException;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 import com.renren.jinkong.kylin.dbtool.model.DbOpDefinition;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 直接方式的表格数据库泵
@@ -85,10 +87,43 @@ public class DirectExcelDbPump {
             excelKit.setSheet(definition.getSheetName());
         }
 
+        // 校验
+        List<String> heads = excelKit.getSheetHeads(definition.getHeadRowNum());
+        List<String> tableFields = executor.getTableFields();
+
+        if(!fieldCheck(heads, tableFields)) {
+            throw new ExcelDataNoMatchException("表格与数据库字段不完全匹配！");
+        }
+
         List list = excelKit.getExcelDataMap(definition.getHeadRowNum(),
                 definition.getStartRowNum(),
                 definition.getEndRowNum());
 
         return executor.batchInsert(list, definition.getDayOrMonth(), batchNo);
+    }
+
+    /**
+     * 字段检测
+     *
+     * 若数据库中字段完全包含表格的字段 为 true
+     *
+     * @param heads
+     * @param tableFields
+     * @return
+     */
+    private boolean fieldCheck(List<String> heads, List<String> tableFields) {
+        int count = 0;
+
+        for(String head : heads) {
+            if(tableFields.contains(head)) {
+                count++;
+            }
+        }
+
+        if(count == heads.size()) {
+            return true;
+        }
+
+        return false;
     }
 }

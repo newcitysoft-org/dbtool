@@ -5,10 +5,12 @@ import com.renren.jinkong.kylin.dbtool.core.manager.DataSourceManager;
 import com.renren.jinkong.kylin.dbtool.core.op.DbInMode;
 import com.renren.jinkong.kylin.dbtool.core.op.DbTimeDimension;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
+import com.renren.jinkong.kylin.dbtool.model.ColumnMeta;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 import com.renren.jinkong.kylin.dbtool.model.TableMeta;
 
 import javax.sql.DataSource;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -59,6 +61,19 @@ public class DirectDataSourceExecutor {
 
     public void setDtm(DbTimeDimension dtm) {
         this.dtm = dtm;
+    }
+
+    public List<String> getTableFields() {
+        List<String> fields = new LinkedList<String>();
+
+        TableMeta tableMeta = new MetaBuilder(dataSource).build(dbTableName);
+        List<ColumnMeta> columnMetas = tableMeta.columnMetas;
+
+        for(ColumnMeta meta : columnMetas) {
+            fields.add(meta.getRemarks());
+        }
+
+        return fields;
     }
 
     public int batchInsert(List list, Object dayOrMonth, String batchNo) {

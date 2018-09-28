@@ -12,8 +12,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author lixin.tian@renren-inc.com
@@ -236,5 +238,17 @@ public class ExcelKit {
         }
 
         return list;
+    }
+
+    public List<String> getSheetHeads(int headRowNum) throws Exception {
+        if(sheet == null) {
+            setSheet();
+        }
+
+        ExcelMapper mapper = new ExcelMapper(sheet, headRowNum);
+
+        Map<String, Integer> headMap = mapper.getHeadMap();
+
+        return new LinkedList<String>(headMap.keySet());
     }
 }

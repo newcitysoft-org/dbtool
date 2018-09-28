@@ -65,12 +65,17 @@ public class ExcelMapper {
         this.endRowNum = endRowNum;
     }
 
+    ExcelMapper(Sheet sheet, int headRowNum) {
+        this.sheet = sheet;
+        this.headRowNum = headRowNum;
+    }
+
     /**
      * 指定头部信息的起始行号
      *
      * @return
      */
-    private Map<String, Integer> getHeadMap() {
+    public Map<String, Integer> getHeadMap() {
         Row root = sheet.getRow(headRowNum);
         short lastCellNum = root.getLastCellNum();
 

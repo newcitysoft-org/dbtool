@@ -1,9 +1,11 @@
 package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.core.op.ExcelVersion;
+import com.renren.jinkong.kylin.dbtool.exception.ExcelVersionException;
 import com.renren.jinkong.kylin.dbtool.kit.ReflectKit;
 import com.renren.jinkong.kylin.dbtool.model.Kv;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,7 +17,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author lixin.tian@renren-inc.com
@@ -229,12 +230,22 @@ public class ExcelKit {
     public List<Kv<String, Integer>> getSheetNames() throws Exception {
         List<Kv<String, Integer>> list = new ArrayList<Kv<String, Integer>>();
 
-        Workbook workbook = createWorkbook();
+        try {
+            Workbook workbook = createWorkbook();
 
-        int numberOfSheets = workbook.getNumberOfSheets();
+            int numberOfSheets = workbook.getNumberOfSheets();
 
-        for (int i = 0; i < numberOfSheets; i++) {
-            list.add(new Kv<String, Integer>(workbook.getSheetAt(i).getSheetName(), i));
+            for (int i = 0; i < numberOfSheets; i++) {
+                list.add(new Kv<String, Integer>(workbook.getSheetAt(i).getSheetName(), i));
+            }
+        } catch (OfficeXmlFileException e) {
+            throw new ExcelVersionException("该版本表格不支持，请选择97-2003的xls文件。");
+        } catch (RuntimeException e) {
+            if(e.getMessage().contains("InvalidFormatException")) {
+                throw new ExcelVersionException("该版本表格不支持，请选择2007的xlsx文件。");
+            }
+
+            throw new RuntimeException(e);
         }
 
         return list;

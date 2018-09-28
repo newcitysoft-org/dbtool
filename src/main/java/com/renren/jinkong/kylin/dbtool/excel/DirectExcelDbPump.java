@@ -2,13 +2,14 @@ package com.renren.jinkong.kylin.dbtool.excel;
 
 import com.renren.jinkong.kylin.dbtool.core.executor.DirectDataSourceExecutor;
 import com.renren.jinkong.kylin.dbtool.exception.ExcelDataNoMatchException;
+import com.renren.jinkong.kylin.dbtool.exception.ExcelVersionException;
 import com.renren.jinkong.kylin.dbtool.kit.StrKit;
 import com.renren.jinkong.kylin.dbtool.model.DbInfo;
 import com.renren.jinkong.kylin.dbtool.model.DbOpDefinition;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 直接方式的表格数据库泵
@@ -87,19 +88,31 @@ public class DirectExcelDbPump {
             excelKit.setSheet(definition.getSheetName());
         }
 
-        // 校验
-        List<String> heads = excelKit.getSheetHeads(definition.getHeadRowNum());
-        List<String> tableFields = executor.getTableFields();
+        try {
+            // 校验
+            List<String> heads = excelKit.getSheetHeads(definition.getHeadRowNum());
+            List<String> tableFields = executor.getTableFields();
 
-        if(!fieldCheck(heads, tableFields)) {
-            throw new ExcelDataNoMatchException("表格与数据库字段不完全匹配！");
+            if(!fieldCheck(heads, tableFields)) {
+                throw new ExcelDataNoMatchException("表格与数据库字段不完全匹配！");
+            }
+
+            List list = excelKit.getExcelDataMap(definition.getHeadRowNum(),
+                    definition.getStartRowNum(),
+                    definition.getEndRowNum());
+
+            return executor.batchInsert(list, definition.getDayOrMonth(), batchNo);
+        } catch (OfficeXmlFileException e) {
+            throw new ExcelVersionException("该版本表格不支持，请选择97-2003的xls文件。");
+        } catch (RuntimeException e) {
+            if(e.getMessage().contains("InvalidFormatException")) {
+                throw new ExcelVersionException("该版本表格不支持，请选择2007的xlsx文件。");
+            }
+
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        List list = excelKit.getExcelDataMap(definition.getHeadRowNum(),
-                definition.getStartRowNum(),
-                definition.getEndRowNum());
-
-        return executor.batchInsert(list, definition.getDayOrMonth(), batchNo);
     }
 
     /**

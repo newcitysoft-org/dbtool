@@ -209,6 +209,15 @@ public class ExcelKit {
         return ReflectKit.transferToList(clazz, dataListMap);
     }
 
+    /**
+     * 根据各行号获取表格数据映射集合
+     *
+     * @param headRowNum 表头行号，从0开始
+     * @param startNum 数据起始行号，从0开始
+     * @param endRowNum 数据结束行号，从0开始
+     * @return
+     * @throws Exception
+     */
     public List<Map<String, String>> getExcelDataMap(int headRowNum, int startNum, int endRowNum) throws Exception {
         if(sheet == null) {
             setSheet();
@@ -251,6 +260,13 @@ public class ExcelKit {
         return list;
     }
 
+    /**
+     * 获取表格当前sheet页中的所有表头
+     *
+     * @param headRowNum
+     * @return
+     * @throws Exception
+     */
     public List<String> getSheetHeads(int headRowNum) throws Exception {
         if(sheet == null) {
             setSheet();

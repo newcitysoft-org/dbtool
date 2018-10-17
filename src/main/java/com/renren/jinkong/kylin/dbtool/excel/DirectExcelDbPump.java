@@ -9,6 +9,7 @@ import com.renren.jinkong.kylin.dbtool.model.DbOpDefinition;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,6 +36,9 @@ public class DirectExcelDbPump {
      */
     private String dbTableName;
 
+    /**
+     * 数据操作定义
+     */
     private DbOpDefinition definition = DbOpDefinition.DEFAULT_DEFINITION;
 
     public DirectExcelDbPump(DbInfo info) {
@@ -65,9 +69,10 @@ public class DirectExcelDbPump {
     }
 
     /**
-     * 批次号
+     * 开启水泵
+     * 执行插入数据
      *
-     * @param batchNo
+     * @param batchNo 批次号
      * @return
      * @throws Exception
      */
@@ -92,15 +97,15 @@ public class DirectExcelDbPump {
             // 校验
             List<String> heads = excelKit.getSheetHeads(definition.getHeadRowNum());
             List<String> tableFields = executor.getTableFields();
-
+            // 字段检测，检查数据库中的字段是否全部包含表格的表头
             if(!fieldCheck(heads, tableFields)) {
-                throw new ExcelDataNoMatchException("表格与数据库字段不完全匹配！");
+                throw new ExcelDataNoMatchException("表格与数据库字段不完全匹配！数据库字段：" + tableFields);
             }
-
+            // 获取表格数据
             List list = excelKit.getExcelDataMap(definition.getHeadRowNum(),
                     definition.getStartRowNum(),
                     definition.getEndRowNum());
-
+            // 执行批量插入操作
             return executor.batchInsert(list, definition.getDayOrMonth(), batchNo);
         } catch (OfficeXmlFileException e) {
             throw new ExcelVersionException("该版本表格不支持，请选择97-2003的xls文件。");
@@ -120,13 +125,13 @@ public class DirectExcelDbPump {
      *
      * 若数据库中字段完全包含表格的字段 为 true
      *
-     * @param heads
-     * @param tableFields
+     * @param heads 表格表头集合
+     * @param tableFields 数据字段集合
      * @return
      */
     private boolean fieldCheck(List<String> heads, List<String> tableFields) {
         int count = 0;
-
+        // 去除集合中字符串前后空格
         List<String> trims = StrKit.trims(tableFields);
 
         for(String head : heads) {

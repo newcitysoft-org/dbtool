@@ -14,13 +14,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 直接方式数据源执行器
+ *
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/19 14:48
  */
 public class DirectDataSourceExecutor {
+    /**
+     * 数据源
+     */
     private DataSource dataSource;
+
+    /**
+     * 表格名
+     */
     private String dbTableName;
+
+    /**
+     * 数据插入模式
+     */
     private DbInMode inMode = DbInMode.ADD;
+
+    /**
+     * 数据时间维度
+     */
     private DbTimeDimension dtm;
 
     public DirectDataSourceExecutor(DbInfo info) {
@@ -63,6 +80,11 @@ public class DirectDataSourceExecutor {
         this.dtm = dtm;
     }
 
+    /**
+     * 获取表格域
+     *
+     * @return
+     */
     public List<String> getTableFields() {
         List<String> fields = new LinkedList<String>();
 
@@ -76,6 +98,14 @@ public class DirectDataSourceExecutor {
         return fields;
     }
 
+    /**
+     * 批量插入数据
+     *
+     * @param list
+     * @param dayOrMonth
+     * @param batchNo
+     * @return
+     */
     public int batchInsert(List list, Object dayOrMonth, String batchNo) {
         if(dataSource == null) {
             throw new IllegalArgumentException("未获取数据源！");

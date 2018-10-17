@@ -21,9 +21,21 @@ import java.util.Map;
  */
 public class ExcelMapper {
 
+    /**
+     * Sheet页
+     */
     private Sheet sheet;
+    /**
+     * 表头行号
+     */
     private int headRowNum;
+    /**
+     * 数据起始行号
+     */
     private int startRowNum;
+    /**
+     * 数据结束行号
+     */
     private int endRowNum;
 
     public ExcelMapper(Sheet sheet, int headRowNum, int startRowNum, int endRowNum) {

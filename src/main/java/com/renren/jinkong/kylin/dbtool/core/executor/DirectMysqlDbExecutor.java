@@ -45,7 +45,7 @@ public class DirectMysqlDbExecutor {
             }
 
             if(dateOrMonth == null) {
-                throw new IllegalArgumentException("维度所对应的时间为设置！");
+                throw new IllegalArgumentException("维度所对应的时间未设置！");
             }
 
             // 模式二：提前删除各维度的所有数据

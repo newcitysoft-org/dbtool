@@ -9,6 +9,8 @@ import javax.sql.DataSource;
 import java.util.List;
 
 /**
+ * 默认数据源执行器
+ *
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/19 14:48
  */

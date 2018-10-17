@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 表格数据库泵
+ * 采用反射+注解的方式，实现ORM。
  *
  * @author lixin.tian@renren-inc.com
  * @date 2018/9/20 17:39
